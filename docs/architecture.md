@@ -13,4 +13,4 @@ flowchart LR
   Q --> H[Human approval gate / no auto-send / no auto-cancel]
 ~~~
 
-The Gemini call is limited to extraction of facts from the source notice. Decisions are made by the deterministic policy engine, and actions are reversible records until the human approval gate is satisfied. Firestore is optional locally and used when the Cloud Run service has a Google Cloud service account and GOOGLE_CLOUD_PROJECT configured.
+The Gemini call is limited to extraction of facts from the source notice. Decisions are made by the deterministic policy engine, and actions are reversible records until the human approval gate is satisfied. Firestore is optional locally and used when the Cloud Run service has a Google Cloud service account, `GOOGLE_CLOUD_PROJECT`, and healthy Firestore access configured.

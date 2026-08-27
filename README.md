@@ -15,7 +15,7 @@ The output is not a summary. It is a supervised action packet:
 - calendar review hold and approval task staged as explicit records
 - vendor reply drafted but explicitly non-sendable
 - staged records carry stable per-run idempotency keys for safe replay
-- full run and guardrails persisted to Firestore when Cloud Run is configured with a project; local runs use an in-memory store
+- full run and guardrails persisted to Firestore when Cloud Run is configured with a project and healthy Firestore access; local runs use an in-memory store
 
 The demo uses synthetic ZenCloud data. With no API key, it uses a deterministic local extractor so the workflow remains reproducible. With GEMINI_API_KEY, the Google GenAI SDK uses the configured Gemini model and structured JSON output.
 
@@ -23,7 +23,7 @@ The demo uses synthetic ZenCloud data. With no API key, it uses a deterministic 
 
 - Gemini 3.5 Flash through @google/genai (Google GenAI SDK)
 - Node.js service designed for Google Cloud Run
-- Firestore persistence when deployed with GOOGLE_CLOUD_PROJECT
+- Firestore persistence when deployed with GOOGLE_CLOUD_PROJECT and healthy Firestore access
 - vanilla HTML/CSS/JS product UI with no build step
 - Taskmaster category: a complete workflow, not a chat loop
 
@@ -62,10 +62,10 @@ The included Dockerfile is self-contained and uses the committed lockfile for re
 ~~~bash
 gcloud config set project YOUR_PROJECT_ID
 gcloud services enable run.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com
-gcloud run deploy renewal-relay --source . --region europe-west1 --allow-unauthenticated --set-env-vars GEMINI_MODEL=gemini-3.5-flash,FIRESTORE_ENABLED=true
+gcloud run deploy renewal-relay --source . --region europe-west1 --allow-unauthenticated --set-env-vars GEMINI_MODEL=gemini-3.5-flash,FIRESTORE_ENABLED=true --update-secrets GEMINI_API_KEY=gemini-api-key:1
 ~~~
 
-Set GEMINI_API_KEY through Secret Manager in a real deployment; do not pass it in shell history or commit it. Create a Firestore database in the selected project and grant the Cloud Run service account permission to read/write the renewal-relay-runs collection.
+Before deploying, create the `gemini-api-key` Secret Manager secret and version 1 through an authorized secret-management flow, then grant the Cloud Run service account access to that secret. The `--update-secrets` flag attaches the pinned version to `GEMINI_API_KEY`; do not pass the key in shell history or commit it. Create a Firestore database in the selected project and grant the Cloud Run service account permission to read/write the renewal-relay-runs collection. See Google's [Cloud Run secrets guidance](https://docs.cloud.google.com/run/docs/configuring/services/secrets).
 
 Cloud Run injects PORT; the service listens on 0.0.0.0 and exposes /api/health for the runtime proof step. The Cloud Run deployment URL, revision, and /api/health response should be captured for the submission video.
 
@@ -79,7 +79,7 @@ The checker reports `verified` only for HTTP 200 JSON with `ok: true` and `servi
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [release-readiness review](docs/release-readiness.md), the [demo runbook](docs/demo-runbook.md), the [human-gate handoff](docs/human-gates.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
+See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [release-readiness review](docs/release-readiness.md), the [submission answer pack](docs/devpost-submission-pack.md), the [demo runbook](docs/demo-runbook.md), the [human-gate handoff](docs/human-gates.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
 
 ## Demo script (under 4 minutes)
 

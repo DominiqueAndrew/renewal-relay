@@ -1,6 +1,6 @@
 # Responsive UI review
 
-Review target: `7b1bb3ae3e78fa61aed26fa805ceb2083a77a8e`  
+Review targets: `7b1bb3ae3e78fa61aed26fa805ceb2083a77a8e` for initial/completed geometry; `2b5488196830b301bb6aa556d3c651bae52e8f08` for the failure/retry state
 Review date: 2026-08-27  
 Method: responsive-ui-review checklist, Chrome headless at 100% zoom, local synthetic demo data.
 
