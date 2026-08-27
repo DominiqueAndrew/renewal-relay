@@ -247,3 +247,6 @@ policy result, four staged records, and guardrails. For cloud proof, follow the
 README deployment instructions only with an authorized Google Cloud project and keep
 API keys in Secret Manager. Capture the Cloud Run service URL/revision and `/api/health`
 response for the public demo; do not claim that proof until it exists.
+- [Cloud Run service identity](https://docs.cloud.google.com/run/docs/configuring/services/service-identity) — official service-account identity and least-privilege attachment guidance for Cloud Run workloads.
+- [Firestore database management](https://cloud.google.com/firestore/docs/manage-databases) — official database creation, region, and IAM guidance used by the live-action handoff.
+- [Google AI Studio API keys](https://ai.google.dev/gemini-api/docs/api-key) — official key-creation and key-management path; the key itself is never stored in this repository.

@@ -10,6 +10,10 @@ Use the [demo capture receipt](demo-capture-receipt.md) to record observed SHA,
 Cloud Run revision/URL, redacted runtime proof, live Gemini evidence, public video,
 and Devpost status as separate fields.
 
+Follow the [human action pack](human-action-pack.md) for the exact credential-safe
+CLI/console paths and expected evidence. It includes a local fallback when access
+is unavailable.
+
 This checklist contains actions that require the entrant’s account access,
 personal facts, consent, or final judgment. The repository does not mark any item
 complete on the entrant’s behalf.

@@ -61,7 +61,7 @@ The included Dockerfile is self-contained and uses the committed lockfile for re
 
 ~~~bash
 gcloud config set project YOUR_PROJECT_ID
-gcloud services enable run.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com
+gcloud services enable run.googleapis.com artifactregistry.googleapis.com firestore.googleapis.com secretmanager.googleapis.com
 gcloud run deploy renewal-relay --source . --region europe-west1 --allow-unauthenticated --set-env-vars GEMINI_MODEL=gemini-3.5-flash,FIRESTORE_ENABLED=true --update-secrets GEMINI_API_KEY=gemini-api-key:1
 ~~~
 
@@ -79,7 +79,7 @@ The checker reports `verified` only for HTTP 200 JSON with `ok: true` and `servi
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [release-readiness review](docs/release-readiness.md), the [submission answer pack](docs/devpost-submission-pack.md), the [demo runbook](docs/demo-runbook.md), the [demo capture receipt](docs/demo-capture-receipt.md), the [human-gate handoff](docs/human-gates.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
+See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [release-readiness review](docs/release-readiness.md), the [submission answer pack](docs/devpost-submission-pack.md), the [human action pack](docs/human-action-pack.md), the [demo runbook](docs/demo-runbook.md), the [demo capture receipt](docs/demo-capture-receipt.md), the [human-gate handoff](docs/human-gates.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
 
 ## Demo script (under 4 minutes)
 
