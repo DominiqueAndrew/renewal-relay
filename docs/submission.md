@@ -29,7 +29,7 @@ Gemini 3.5 Flash through the Google GenAI SDK, Node.js, Google Cloud Run, and Fi
 - A safe default can still be useful: the system routes high-value renewals to a human instead of silently guessing or auto-approving.
 - Async progress and an audit trail make the agent’s behavior legible to both an operator and a reviewer.
 
-The [science and evidence appendix](../SCIENCE_APPENDIX.md) records the policy equations, evidence map, experiments, and limitations. The [release receipt](release-receipt.md) binds the current public evidence to an exact SHA, and the [demo runbook](demo-runbook.md) keeps local proof separate from the required Cloud Run recording. The action cards in this demo are internal staged records; they are not claims that a real calendar, task system, or vendor mailbox was mutated.
+The [science and evidence appendix](../SCIENCE_APPENDIX.md) records the policy equations, evidence map, experiments, and limitations. The [release receipt](release-receipt.md) binds the current public evidence to an exact SHA, the [demo runbook](demo-runbook.md) keeps local proof separate from the required Cloud Run recording, and the [human-gate handoff](human-gates.md) lists the remaining entrant-only actions. The action cards in this demo are internal staged records; they are not claims that a real calendar, task system, or vendor mailbox was mutated.
 
 ## Demo video outline
 

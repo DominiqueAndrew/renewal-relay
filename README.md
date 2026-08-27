@@ -79,7 +79,7 @@ The checker reports `verified` only for HTTP 200 JSON with `ok: true` and `servi
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [demo runbook](docs/demo-runbook.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
+See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [demo runbook](docs/demo-runbook.md), the [human-gate handoff](docs/human-gates.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
 
 ## Demo script (under 4 minutes)
 
