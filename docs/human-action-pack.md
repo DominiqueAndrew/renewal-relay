@@ -6,11 +6,14 @@ This is the smallest path from the verified local slice to a truthful live demo 
 
 The Devpost Hackathons plugin refreshed the official event surfaces at `2026-08-27T15:43:22Z`: the event is `submissions_open`, the deadline is `2026-09-01T00:00:00Z` (August 31 at 5:00 PM Pacific), and the current form still reports `can_register: true` and `already_registered: false`. The latest credit announcement says delivery is delayed and asks entrants not to submit duplicate requests while waiting; credits are not guaranteed, so use the credential-free fallback below if access is not approved.
 
-Current public release to deploy or show in the recording: commit
-`5320ddacab73bd15fc1e5e1b0b386957a3ce9c36`, with green CI run
-[33089215993](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33089215993).
+Verified runtime/image source boundary: commit
+`85ce2eca5f99fcc3a41c57fd9f78555b8dab3447`, with green CI run
+[33088618041](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33088618041).
 The matching local image receipt is recorded in [release-receipt.md](release-receipt.md);
 its digest is `sha256:d7911f58d5f9026696d2d9f31211329620f201abfce6f0ccc5220a08a9f0e9dc`.
+Immediately before any deployment or recording, run `git rev-parse HEAD` and retain
+that exact returned SHA alongside the Cloud Run revision; the intervening public
+commits are documentation-only.
 
 If requesting the advertised credits, open the live [Resources tab](https://allthingsagentichackathon.devpost.com/resources) and use the link shown there. The current rules text and Resources block expose different Google Forms URLs, so do not hard-code either one or claim that credits were requested/approved without the entrant's own receipt.
 
