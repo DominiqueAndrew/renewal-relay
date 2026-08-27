@@ -12,7 +12,7 @@ async function loadDemo() {
   $("noticeSubject").textContent = notice.subject;
   $("noticeFrom").textContent = notice.from;
   $("noticeBody").textContent = notice.body;
-  $("runtimeLabel").textContent = data.cloud.store === "Firestore configured" ? "Cloud Run · Firestore" : "Cloud Run ready";
+  $("runtimeLabel").textContent = data.cloud.store === "Firestore configured" ? "Cloud Run · Firestore" : "Cloud Run-ready local";
 }
 
 function renderTimeline(run) {

@@ -14,13 +14,13 @@ Renewal Relay turns a renewal notice into a policy-checked, human-approved actio
 
 ## Description
 
-Renewal deadlines arrive as inbox noise, but the cost of missing one is real. Renewal Relay reads one synthetic renewal notice, extracts the facts with Gemini 3.5 Flash, checks an explicit company policy in deterministic code, and stages the work needed to move forward: a calendar hold record, an approval task record, a vendor reply draft, and a durable audit record.
+Renewal deadlines arrive as inbox noise, but the cost of missing one is real. Renewal Relay reads one synthetic renewal notice, extracts the facts through a configured Gemini 3.5 Flash adapter (with an explicitly labeled deterministic fallback for the reproducible no-key demo), checks an explicit company policy in deterministic code, and stages the work needed to move forward: a calendar hold record, an approval task record, a vendor reply draft, and a durable audit record.
 
 This is autonomous action with a boundary. The agent runs as a background job, makes the routing decision, and prepares the next steps without requiring the operator to translate a summary into more work. It does not send an external message, cancel a contract, or approve a financial commitment without a human. If a renewal is above the threshold or a fact is missing, it escalates with the reason visible.
 
 ## Technologies
 
-Gemini 3.5 Flash through the Google GenAI SDK, Node.js, Google Cloud Run, and Firestore. The frontend is a small vanilla HTML/CSS/JavaScript UI. Local runs use synthetic data and a deterministic extractor when no Gemini API key is available.
+Gemini 3.5 Flash through the Google GenAI SDK, Node.js, Google Cloud Run, and Firestore. The frontend is a small vanilla HTML/CSS/JavaScript UI. The live Gemini path is implemented; local runs use synthetic data and a deterministic extractor when no Gemini API key is available, and the live provider run remains an explicit release gate.
 
 ## Findings and learnings
 

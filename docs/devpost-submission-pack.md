@@ -10,7 +10,7 @@ Snapshot: 2026-08-27, Europe/Paris. Live plugin refresh: 2026-08-27T15:43:22Z. T
 | Tagline | `Renewal Relay turns a renewal notice into a policy-checked, human-approved action packet before the deadline disappears.` |
 | Category | `Taskmaster` |
 | Description | Use the [submission description](submission.md#description). It describes the synthetic notice, Gemini extraction boundary, deterministic policy, four staged records, asynchronous run, and human approval boundary. |
-| Built with | `Gemini 3.5 Flash`, `Google GenAI SDK (google-genai)`, `Node.js`, `Cloud Run`, `Firestore`, vanilla HTML/CSS/JavaScript |
+| Built with | `Gemini 3.5 Flash` adapter, `Google GenAI SDK (google-genai)`, `Node.js`, `Cloud Run`, `Firestore`, vanilla HTML/CSS/JavaScript; live Gemini execution remains a gate |
 | Code repository | `https://github.com/DominiqueAndrew/renewal-relay` |
 | Architecture diagram | Upload `docs/architecture.png` from the exact public release commit. The editable source is `docs/architecture.svg`; the live field accepts PNG/JPG/JPEG/PDF/PPT/PPTX. |
 | Demo video | Human must publish a public YouTube or Vimeo URL after recording the live Cloud Run proof. |

@@ -2,7 +2,7 @@
 
 Renewal Relay is a narrow autonomous operations agent for a recurring, expensive chore: turning renewal notices into accountable next steps before a deadline disappears.
 
-It reads one renewal notice, extracts the facts with Gemini 3.5 Flash, checks a deterministic company policy, then stages a calendar hold, routes an approval task, drafts a safe vendor reply, and writes an audit record. The agent runs asynchronously so the operator sees the work happen step by step. It never auto-sends a message or auto-cancels a contract.
+It reads one renewal notice, extracts the facts through a configured Gemini 3.5 Flash adapter (or an explicitly labeled deterministic fallback for no-key demos), checks a deterministic company policy, then stages a calendar hold, routes an approval task, drafts a safe vendor reply, and writes an audit record. The agent runs asynchronously so the operator sees the work happen step by step. It never auto-sends a message or auto-cancels a contract.
 
 ## Why this is a complete workflow
 

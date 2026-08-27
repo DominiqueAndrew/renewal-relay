@@ -24,6 +24,7 @@ test("health endpoint exposes a Cloud Run-ready service", async () => {
 
 test("run endpoint queues a background run and returns the completed packet", async () => {
   const demo = await (await fetch("http://localhost:" + port + "/api/demo")).json();
+  assert.equal(demo.cloud.runtime, "Cloud Run-compatible service");
   const queuedResponse = await fetch("http://localhost:" + port + "/api/runs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(demo.notice) });
   const queued = await queuedResponse.json();
   assert.equal(queuedResponse.status, 202);

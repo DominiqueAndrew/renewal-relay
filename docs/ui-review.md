@@ -1,6 +1,6 @@
 # Responsive UI review
 
-Review target: current worktree provenance-row change (completed-run evidence plus failed-state clearing).
+Review target: current worktree provenance-row change (completed-run evidence plus failed-state clearing) and the local runtime-label claim boundary.
 Review date: 2026-08-27
 Method: the responsive-ui-review checklist, Playwright CLI with Chrome at 100% zoom, synthetic local demo data. Screenshots were captured at the required viewport sizes after scrolling the run panel into view; each PNG retains the requested viewport dimensions.
 
@@ -20,6 +20,24 @@ Method: the responsive-ui-review checklist, Playwright CLI with Chrome at 100% z
 The completed run shows PROVENANCE / RECORDED, the provider label, and a shortened SHA-256 digest (12 hex chars ... 8 hex chars) before the policy result. The failed run shows Run stopped safely, Run stopped safely · no actions staged, and an enabled Retry safely button; the provenance, decision, and action regions are all hidden and cleared.
 
 The completed-state screenshots also show four staged action records. The initial shell and CTA geometry is unchanged by this completed-state-only addition; the initial state remains covered by the prior baseline review at the six required viewport sizes.
+
+## Claim-boundary follow-up
+
+The top-right runtime label now reads `Cloud Run-ready local` for the memory
+fallback and changes to `Cloud Run · Firestore` only when Firestore is configured.
+The six fresh completed-state captures below were inspected at 100% zoom and
+device scale factor 1; the label remains compact, does not clip, and introduces
+no horizontal overflow. On narrow mobile it is intentionally reduced by the
+existing topbar rule.
+
+| Viewport | Fresh completed-state artifact | Verdict |
+| --- | --- | --- |
+| 390 × 844 | [claim-complete-mobile-390x844.png](../output/playwright/claim-complete-mobile-390x844.png) | Pass |
+| 768 × 1024 | [claim-complete-tablet-768x1024.png](../output/playwright/claim-complete-tablet-768x1024.png) | Pass |
+| 1366 × 768 | [claim-complete-laptop-1366x768.png](../output/playwright/claim-complete-laptop-1366x768.png) | Pass |
+| 1440 × 900 | [claim-complete-desktop-1440x900.png](../output/playwright/claim-complete-desktop-1440x900.png) | Pass |
+| 1920 × 1080 | [claim-complete-large-1920x1080.png](../output/playwright/claim-complete-large-1920x1080.png) | Pass |
+| 2560 × 1440 | [claim-complete-wide-2560x1440.png](../output/playwright/claim-complete-wide-2560x1440.png) | Pass |
 
 ## Scope and residual risk
 

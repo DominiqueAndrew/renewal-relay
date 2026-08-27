@@ -31,7 +31,7 @@ function validNotice(notice) {
 }
 
 async function handleApi(req, res, pathname) {
-  if (req.method === "GET" && pathname === "/api/demo") return sendJson(res, 200, { notice: SAMPLE_NOTICE, provider: adapter.provider, cloud: { runtime: "Cloud Run ready", store: process.env.GOOGLE_CLOUD_PROJECT ? "Firestore configured" : "Memory fallback (local demo)" } });
+  if (req.method === "GET" && pathname === "/api/demo") return sendJson(res, 200, { notice: SAMPLE_NOTICE, provider: adapter.provider, cloud: { runtime: "Cloud Run-compatible service", store: process.env.GOOGLE_CLOUD_PROJECT ? "Firestore configured" : "Memory fallback (local demo)" } });
   if (req.method === "GET" && pathname === "/api/health") return sendJson(res, 200, { ok: true, service: "renewal-relay", provider: adapter.provider, timestamp: new Date().toISOString() });
   if (req.method === "GET" && pathname.startsWith("/api/runs/")) {
     const run = await store.get(pathname.slice("/api/runs/".length));
