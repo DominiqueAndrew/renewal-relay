@@ -18,6 +18,7 @@ Public repository: [github.com/DominiqueAndrew/renewal-relay](https://github.com
 | Runtime smoke | Fresh container `/api/health`, `/api/demo`, and `/api/runs` | Health 200; synthetic fallback labeled; queue 202; final `complete`; `REVIEW_REQUIRED`; 4 actions; all `record_only`; all retry-safe; vendor draft non-sendable; source fingerprint matches SHA-256 format |
 | Runtime proof contract | `CLOUD_RUN_URL=http://127.0.0.1:18084 npm run verify:runtime` | `verified`; local `/api/health` 200; this is local-container proof, not a live Cloud Run claim |
 | Served UI contract | `GET /` from the fresh container | HTTP 200; provenance, provider, and fingerprint markup present |
+| Tracked secret hygiene | `npm run check:secrets` on the current public tree | 0 findings across 54 tracked files; no secret value was emitted |
 
 ## Verified on the historical evidence baseline
 

@@ -27,7 +27,7 @@ Refreshed through the Devpost Hackathons plugin on 2026-08-27. Devpost remains a
 - `npm test`: 20 passed, 0 failed.
 - `npm run check`: passed, including server, AI adapter, agent, public state, browser bundle, runtime checker, and secret checker syntax/behavior checks.
 - `npm run eval`: 8/8 policy-conformance cases; status accuracy `1.0`; review recall `1.0`; ready precision `1.0`.
-- `npm run check:secrets`: 0 findings across 53 tracked files; no secret value was emitted.
+- `npm run check:secrets`: 0 findings across 54 tracked files; no secret value was emitted.
 - The current release receipt at [`docs/release-receipt.md`](release-receipt.md) records a successful Docker smoke run for `85ce2ec` (`202` to `complete`), image digest `sha256:d7911f58d5f9026696d2d9f31211329620f201abfce6f0ccc5220a08a9f0e9dc`, `npm audit --omit=dev` with 0 vulnerabilities, local `/api/health` verification, source-fingerprint matching, four staged actions, and `REVIEW_REQUIRED`. The older `2addfdc` container remains listed only as historical traceability.
 - The responsive UI review covers mobile, tablet, laptop, desktop, large-desktop, and wide-desktop geometry, including the failed-run state: [`docs/ui-review.md`](ui-review.md).
 
