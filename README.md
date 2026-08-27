@@ -13,6 +13,7 @@ The output is not a summary. It is a supervised action packet:
 - financial threshold and deadline checks evaluated by code, not by the model
 - calendar review hold and approval task staged as explicit records
 - vendor reply drafted but explicitly non-sendable
+- staged records carry stable per-run idempotency keys for safe replay
 - full run and guardrails persisted to Firestore when Cloud Run is configured with a project; local runs use an in-memory store
 
 The demo uses synthetic ZenCloud data. With no API key, it uses a deterministic local extractor so the workflow remains reproducible. With GEMINI_API_KEY, the Google GenAI SDK uses the configured Gemini model and structured JSON output.

@@ -63,6 +63,7 @@ normal supply-chain assumptions.
 | Policy decisions are inspectable and independent of model prose. | `src/domain/policy.js` contains pure amount, time, cancellation-window, and owner checks; `test/agent.test.js` fixes the clock for the threshold test. | Thresholds are product-policy assumptions, not learned or empirically optimal values. |
 | The agent fails closed on extraction failure. | `createRenewalAgent` catches adapter errors, emits a failed timeline event, and returns no action packet; the test asserts no `actions`. | Persistence callback failures are operational errors and should be monitored in a production deployment. |
 | The workflow produces meaningful internal side effects. | The run store records a source notice, timeline, decision, four action records, and guardrails; the UI renders them separately. | “Calendar hold” and “approval task” are staged records in this prototype, not mutations to a real external calendar/task service. The vendor draft is always `sendable: false`. |
+| Replaying a run does not create ambiguous action identities. | Each action carries a stable `renewal-relay:<runId>:<actionId>` idempotency key, `record_only` execution mode, and `retrySafe` marker; the memory store and Firestore adapter upsert the enclosing run by ID, and the test repeats the same run ID. | This proves safe identity/replay semantics for internal records only. Any future external connector still needs provider-specific idempotency, authorization, and retry contract tests. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
 | The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, ten automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
@@ -121,12 +122,14 @@ Missing fields are explicit and cause review rather than imputation.
    out-of-range numbers, unknown fields, and contradictory missing-fact declarations fail
    closed before policy evaluation.
 4. A failed extraction produces a failed run and no actions.
-5. All current actions are reversible internal records. No external message is sent,
+5. Every staged action has a stable per-run idempotency key and `record_only` execution
+   mode; replaying the same run ID preserves action identity.
+6. All current actions are reversible internal records. No external message is sent,
    no contract is cancelled, and no financial commitment is approved automatically.
-6. The vendor draft is marked `sendable: false` in the action metadata.
-7. Local execution uses synthetic ZenCloud data and a memory store. A configured
+7. The vendor draft is marked `sendable: false` in the action metadata.
+8. Local execution uses synthetic ZenCloud data and a memory store. A configured
    deployment can use Firestore, but credentials are not committed.
-8. Production deployment should bind `GEMINI_API_KEY` through Secret Manager and use
+9. Production deployment should bind `GEMINI_API_KEY` through Secret Manager and use
    least-privilege service-account permissions; the README records this as a
    deployment requirement, not as completed evidence.
 
@@ -142,7 +145,7 @@ The test set contains ten cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
-3. a complete run emits four action records and guardrails;
+3. a complete run emits four action records, stable replay keys, and guardrails;
 4. an unavailable extraction provider fails closed with no actions;
 5. health endpoint responds with the Cloud Run-ready service identity;
 6. HTTP run creation is queued asynchronously and reaches completion;

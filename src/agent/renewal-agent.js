@@ -12,8 +12,20 @@ const SAMPLE_NOTICE = {
 
 const pause = (ms) => ms > 0 ? new Promise((resolve) => setTimeout(resolve, ms)) : Promise.resolve();
 
-function action(id, type, title, detail, status = "prepared", metadata = {}) {
-  return { id, type, title, detail, status, metadata };
+function action(runId, id, type, title, detail, status = "prepared", metadata = {}) {
+  return {
+    id,
+    type,
+    title,
+    detail,
+    status,
+    metadata: {
+      ...metadata,
+      idempotencyKey: "renewal-relay:" + runId + ":" + id,
+      execution: "record_only",
+      retrySafe: true
+    }
+  };
 }
 
 export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelayMs = Number(process.env.AGENT_STEP_DELAY_MS || 180), clock = () => new Date() } = {}) {
@@ -41,10 +53,10 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
         await emit("policy", "Policy checked", decision.status.replaceAll("_", " ") + " · " + decision.passedChecks + "/" + decision.totalChecks + " checks passed · " + decision.risk + " risk", "complete", { decision });
 
         const actions = [
-          action("calendar_hold", "calendar", "Calendar hold staged", "Prepared a renewal review hold · " + (extraction.vendor || "vendor") + " · " + (extraction.renewalDate || "date to confirm"), "staged", { date: extraction.renewalDate }),
-          action("approval_task", "task", "Approval task staged", "Prepared for " + policy.owner + "; due " + (extraction.cancelByDate || extraction.renewalDate || "date to confirm"), "staged", { assignee: policy.ownerEmail, dueDate: extraction.cancelByDate || extraction.renewalDate }),
-          action("vendor_draft", "draft", "Vendor reply drafted", decision.status === "REVIEW_REQUIRED" ? "Asks for confirmation before any renewal or cancellation." : "Requests final approval before the renewal is committed.", "drafted", { sendable: false }),
-          action("audit_record", "audit", "Audit record written", "Stores source, extracted facts, policy result, and all reversible actions.", "recorded", { immutable: true })
+          action(runId, "calendar_hold", "calendar", "Calendar hold staged", "Prepared a renewal review hold · " + (extraction.vendor || "vendor") + " · " + (extraction.renewalDate || "date to confirm"), "staged", { date: extraction.renewalDate }),
+          action(runId, "approval_task", "task", "Approval task staged", "Prepared for " + policy.owner + "; due " + (extraction.cancelByDate || extraction.renewalDate || "date to confirm"), "staged", { assignee: policy.ownerEmail, dueDate: extraction.cancelByDate || extraction.renewalDate }),
+          action(runId, "vendor_draft", "draft", "Vendor reply drafted", decision.status === "REVIEW_REQUIRED" ? "Asks for confirmation before any renewal or cancellation." : "Requests final approval before the renewal is committed.", "drafted", { sendable: false }),
+          action(runId, "audit_record", "audit", "Audit record written", "Stores source, extracted facts, policy result, and all reversible actions.", "recorded", { immutable: true })
         ];
         await emit("act", "Actions staged", actions.length + " reversible action records prepared; no external message was sent.", "complete", { actions });
         const completedAt = clock().toISOString();

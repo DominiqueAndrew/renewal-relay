@@ -29,6 +29,15 @@ test("agent completes the full action packet and records guardrails", async () =
   assert.equal(run.decision.passedChecks, 3);
   assert.equal(run.actions.length, 4);
   assert.equal(run.actions.find((item) => item.id === "vendor_draft").metadata.sendable, false);
+  assert.deepEqual(run.actions.map((item) => item.metadata.idempotencyKey), [
+    "renewal-relay:run_test:calendar_hold",
+    "renewal-relay:run_test:approval_task",
+    "renewal-relay:run_test:vendor_draft",
+    "renewal-relay:run_test:audit_record"
+  ]);
+  assert.ok(run.actions.every((item) => item.metadata.execution === "record_only" && item.metadata.retrySafe === true));
+  const replay = await agent.run(SAMPLE_NOTICE, { runId: "run_test", onProgress: () => {} });
+  assert.deepEqual(replay.actions.map((item) => item.metadata.idempotencyKey), run.actions.map((item) => item.metadata.idempotencyKey));
   assert.match(run.guardrails.join(" "), /No auto-cancel/);
   assert.ok(events.length >= 5);
 });
