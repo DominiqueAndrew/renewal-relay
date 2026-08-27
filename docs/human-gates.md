@@ -1,7 +1,9 @@
 # Final human-gate handoff
 
-Snapshot: 2026-08-27 (Europe/Paris)  
-Project: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay)  
+Snapshot: 2026-08-27 (Europe/Paris)
+
+Project: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay)
+
 Submission deadline from the live Devpost form: `2026-09-01T00:00:00Z`.
 
 This checklist contains actions that require the entrant’s account access,
