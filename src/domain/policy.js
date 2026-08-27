@@ -11,7 +11,7 @@ export const DEFAULT_POLICY = Object.freeze({
 
 function daysUntil(dateText, now) {
   const date = new Date(dateText + "T12:00:00Z");
-  return Math.ceil((date.getTime() - now.getTime()) / DAY_MS);
+  return Number.isFinite(date.getTime()) ? Math.ceil((date.getTime() - now.getTime()) / DAY_MS) : null;
 }
 
 export function evaluateRenewal(extraction, policy = DEFAULT_POLICY, now = new Date()) {
@@ -28,8 +28,8 @@ export function evaluateRenewal(extraction, policy = DEFAULT_POLICY, now = new D
   checks.push({
     id: "deadline",
     label: "Enough time before renewal",
-    passed: daysToRenewal >= policy.reviewWindowDays,
-    detail: daysToRenewal + " days until renewal; policy expects at least " + policy.reviewWindowDays
+    passed: Number.isFinite(daysToRenewal) && daysToRenewal >= policy.reviewWindowDays,
+    detail: Number.isFinite(daysToRenewal) ? daysToRenewal + " days until renewal; policy expects at least " + policy.reviewWindowDays : "No valid renewal date found"
   });
   checks.push({
     id: "cancel-window",
@@ -46,7 +46,7 @@ export function evaluateRenewal(extraction, policy = DEFAULT_POLICY, now = new D
 
   const passed = checks.filter((check) => check.passed).length;
   const requiresHumanReview = checks.some((check) => !check.passed) || amount > policy.amountReviewThreshold;
-  const risk = amount > policy.amountReviewThreshold || daysToRenewal < policy.reviewWindowDays ? "high" : "guarded";
+  const risk = amount > policy.amountReviewThreshold || !Number.isFinite(daysToRenewal) || daysToRenewal < policy.reviewWindowDays ? "high" : "guarded";
 
   return {
     status: requiresHumanReview ? "REVIEW_REQUIRED" : "READY_FOR_APPROVAL",

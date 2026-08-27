@@ -34,11 +34,14 @@ Requirements: Node.js 20+.
 ~~~bash
 npm install
 npm test
+npm run eval
 npm run check
 npm start
 ~~~
 
 Open http://localhost:8080, then click **Run Renewal Relay**. The demo is synthetic and safe to run repeatedly.
+
+`npm run eval` runs the fixed-clock eight-case policy conformance matrix and prints its JSON metrics.
 
 ### Optional live Gemini extraction
 

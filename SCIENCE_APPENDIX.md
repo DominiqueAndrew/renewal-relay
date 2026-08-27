@@ -134,7 +134,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains seven cases:
+The test set contains eight cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
@@ -142,11 +142,15 @@ The test set contains seven cases:
 4. an unavailable extraction provider fails closed with no actions;
 5. health endpoint responds with the Cloud Run-ready service identity;
 6. HTTP run creation is queued asynchronously and reaches completion;
-7. incomplete HTTP notices are rejected before queueing.
+7. incomplete HTTP notices are rejected before queueing;
+8. the fixed-clock policy matrix conforms at the amount boundary and across missing/urgent facts.
 
-Observed result: **7 passed, 0 failed** via `npm test`; syntax, whitespace, and
-container checks also passed. This is a behavioral regression suite, not a claim of
-model accuracy.
+Observed result: **8 passed, 0 failed** via `npm test`; syntax, whitespace, and
+container checks also passed. The separate `npm run eval` report is **8/8 exact
+policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
+review recall `1.0` across six expected-review cases, and ready precision `1.0`
+across two expected-ready cases. These are conformance metrics against hand-authored
+policy labels, not estimates of model accuracy or business outcomes.
 
 ### Container and UI checks
 

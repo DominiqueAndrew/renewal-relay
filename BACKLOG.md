@@ -25,6 +25,7 @@ without live evidence.
 - [x] Build and test the synthetic asynchronous Taskmaster vertical slice.
 - [x] Publish the public repository and verify CI on the pushed SHA.
 - [x] Add scientific/engineering evidence appendix and live Devpost rubric/form map.
+- [x] Add a fixed-clock eight-case policy conformance matrix with reproducible metrics.
 - [ ] Obtain authorized Google Cloud access, deploy Cloud Run with Firestore, and
   capture a sanitized service URL, revision, and `/api/health` receipt.
 - [ ] With an authorized Gemini key, run the same synthetic notice through the live
