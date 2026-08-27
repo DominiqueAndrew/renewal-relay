@@ -69,6 +69,14 @@ Set GEMINI_API_KEY through Secret Manager in a real deployment; do not pass it i
 
 Cloud Run injects PORT; the service listens on 0.0.0.0 and exposes /api/health for the runtime proof step. The Cloud Run deployment URL, revision, and /api/health response should be captured for the submission video.
 
+After an authorized deployment, verify the public health contract without exposing credentials:
+
+~~~bash
+CLOUD_RUN_URL="https://YOUR_SERVICE_URL" npm run verify:runtime
+~~~
+
+The checker reports `verified` only for HTTP 200 JSON with `ok: true` and `service: "renewal-relay"`. A missing URL is reported as `blocked`; neither state is evidence of a live deployment.
+
 ## Architecture
 
 See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), the [responsive UI review](docs/ui-review.md), the [release evidence receipt](docs/release-receipt.md), the [demo runbook](docs/demo-runbook.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.

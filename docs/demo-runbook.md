@@ -28,9 +28,9 @@ Open `http://localhost:8080` and click **Run Renewal Relay**.
 4. Show the four records: calendar hold staged, approval task staged, vendor reply
    drafted, and audit record written. Point out that the vendor draft is
    `sendable: false`.
-5. Show `/api/health`, then show the Cloud Run service URL, revision, and runtime
-   response in the authorized Google Cloud console. This step is still open in the
-   current evidence target.
+5. Run `CLOUD_RUN_URL="https://YOUR_SERVICE_URL" npm run verify:runtime`, then show
+   the Cloud Run service URL, revision, and runtime response in the authorized Google
+   Cloud console. This step is still open in the current evidence target.
 6. Close on the safety boundary: no auto-send, no auto-cancel, and human approval
    is required for financial commitment.
 

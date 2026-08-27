@@ -66,6 +66,7 @@ normal supply-chain assumptions.
 | The workflow produces meaningful internal side effects. | The run store records a source notice, timeline, decision, four action records, and guardrails; the UI renders them separately. | “Calendar hold” and “approval task” are staged records in this prototype, not mutations to a real external calendar/task service. The vendor draft is always `sendable: false`. |
 | Replaying a run does not create ambiguous action identities. | Each action carries a stable `renewal-relay:<runId>:<actionId>` idempotency key, `record_only` execution mode, and `retrySafe` marker; the memory store and Firestore adapter upsert the enclosing run by ID, and the test repeats the same run ID. | This proves safe identity/replay semantics for internal records only. Any future external connector still needs provider-specific idempotency, authorization, and retry contract tests. |
 | A stored run can be checked against the source content that produced it. | `fingerprintNotice` canonicalizes the source subject, sender, received time, and body in a fixed order and records a SHA-256 digest on the run and audit action; tests prove same-content stability and changed-content divergence. | This is an integrity fingerprint, not authenticity, a digital signature, or proof that the source was not already manipulated before intake. |
+| Cloud runtime proof can be repeated without exposing credentials. | `scripts/verify-runtime.mjs` checks only a supplied URL's `/api/health` contract and returns redacted `verified`, `blocked`, or `failed` JSON; unit tests cover missing URL, success, and contract failure. | No URL was available in this worktree, so live Cloud Run, revision, IAM, and Firestore proof remain open. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
 | The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, ten automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
@@ -145,7 +146,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains fourteen cases:
+The test set contains seventeen cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
@@ -160,9 +161,12 @@ The test set contains fourteen cases:
 11. failed UI runs expose a safe retry state and hide outputs;
 12. completed UI runs alone expose the decision and staged actions;
 13. queued/running UI states expose a busy label and suppress duplicate-run affordances;
-14. source fingerprints are stable for the same content and change when content changes.
+14. source fingerprints are stable for the same content and change when content changes;
+15. the runtime proof checker blocks a missing URL;
+16. the runtime proof checker verifies the health contract without copying query credentials;
+17. the runtime proof checker fails closed on a bad response.
 
-Observed result: **14 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **17 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`
@@ -230,6 +234,7 @@ From the repository root:
 npm ci
 npm test
 npm run check
+CLOUD_RUN_URL="https://YOUR_SERVICE_URL" npm run verify:runtime
 docker build -t renewal-relay:local .
 docker run --rm -p 8080:8080 renewal-relay:local
 ```
