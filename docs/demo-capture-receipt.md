@@ -18,21 +18,21 @@ into the live Cloud Run or Gemini fields below.
 
 | Field | Observed value |
 | --- | --- |
-| Captured at (UTC) | `2026-08-27T15:49:38.909Z` |
-| Source SHA | `41195fd0a3ee01813fd66a7921dcb5cfb4f08a2c` |
-| Public CI | [run 33089814678](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33089814678), green on the source SHA |
-| Image build | `docker build --no-cache -t renewal-relay:release-41195fd .` passed |
-| Docker image | `renewal-relay:release-41195fd` |
-| Image digest | `sha256:89ccf1f44cbaf751dccd0165d17d7c787b9765d9046652b58f8489e7d3a2646c` |
-| Local endpoint | `http://127.0.0.1:18085` during capture; container stopped afterward |
-| Health and demo | HTTP 200; service `renewal-relay`; deterministic synthetic provider and memory fallback explicitly labeled |
-| Queue/read-back | POST `202`; local run `run_mtbp7ryj` reached `complete` |
+| Captured at (UTC) | `2026-08-27T16:00:18.932Z` |
+| Source SHA | `b61ea9a38f6514313443d6c5007595bc840fa74d` |
+| Public CI | [run 33090844696](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33090844696), green on the source SHA |
+| Image build | `docker build --no-cache -t renewal-relay:release-b61ea9a .` passed |
+| Docker image | `renewal-relay:release-b61ea9a` |
+| Image digest | `sha256:d2a24783db29808040863b2d7e95161c116769cafe64743d5fe5cdbfbf248691` |
+| Local endpoint | `http://127.0.0.1:18087` during capture; container stopped afterward |
+| Health and demo | HTTP 200; service `renewal-relay`; `Cloud Run-compatible service`, deterministic synthetic provider, and memory fallback explicitly labeled |
+| Queue/read-back | POST `202`; local run `run_mtbplhso` reached `complete` |
 | Policy/action result | `REVIEW_REQUIRED`; 3/4 policy checks passed; 4 actions; all `record_only` and retry-safe; vendor draft `sendable: false` |
 | Source integrity | Source fingerprint matched the expected 64-hex SHA-256 format |
-| Local runtime checker | `verified` at `2026-08-27T15:49:39.366Z`; local proof only, not Cloud Run evidence |
+| Local runtime checker | `verified` at `2026-08-27T16:00:19.245Z`; local proof only, not Cloud Run evidence |
 | Production dependency audit | `npm audit --omit=dev`: 0 vulnerabilities |
 
-Reproduce this fallback with `docker run --rm -p 8080:8080 renewal-relay:release-41195fd`
+Reproduce this fallback with `docker run --rm -p 8080:8080 renewal-relay:release-b61ea9a`
 or the local commands in [human-action-pack.md](human-action-pack.md). The live
 Cloud Run, Firestore, Gemini, video, and Devpost fields remain open until observed.
 
