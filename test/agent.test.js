@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createDemoAdapter } from "../src/ai/gemini-adapter.js";
+import { createDemoAdapter, validateExtraction } from "../src/ai/gemini-adapter.js";
 import { createRenewalAgent, SAMPLE_NOTICE } from "../src/agent/renewal-agent.js";
 import { DEFAULT_POLICY, evaluateRenewal } from "../src/domain/policy.js";
 
@@ -46,4 +46,71 @@ test("agent fails closed when extraction is unavailable and stages no actions", 
   assert.match(run.error, /provider unavailable/);
   assert.equal(run.timeline.at(-1).state, "failed");
   assert.ok(events.some((event) => event.status === "failed"));
+});
+
+test("extraction validator rejects model-controlled action fields and malformed dates", () => {
+  assert.throws(() => validateExtraction({
+    vendor: "ZenCloud",
+    plan: "Pro workspace",
+    amount: 1440,
+    currency: "USD",
+    renewalDate: "2026-09-12",
+    confidence: 0.96,
+    missingFacts: [],
+    actions: [{ type: "send_email" }]
+  }), /unexpected field actions/);
+  assert.throws(() => validateExtraction({
+    vendor: "ZenCloud",
+    plan: "Pro workspace",
+    amount: 1440,
+    currency: "USD",
+    renewalDate: "2026-02-30",
+    confidence: 0.96,
+    missingFacts: []
+  }), /real ISO/);
+  assert.throws(() => validateExtraction({
+    vendor: "ZenCloud",
+    plan: "Pro workspace",
+    amount: 1440,
+    currency: "USD",
+    renewalDate: "2026-09-12",
+    confidence: 1.1,
+    missingFacts: []
+  }), /confidence must be a finite non-negative number/);
+  assert.throws(() => validateExtraction({
+    vendor: "ZenCloud",
+    plan: "Pro workspace",
+    amount: 1440,
+    currency: "USD",
+    renewalDate: "2026-09-12",
+    cancelByDate: "",
+    owner: "",
+    ownerEmail: "",
+    confidence: 0.96,
+    missingFacts: ["renewalDate", "cancelByDate", "owner", "ownerEmail"]
+  }), /missingFacts marks present field renewalDate/);
+});
+
+test("agent fails closed when an adapter returns an unsafe extraction shape", async () => {
+  const agent = createRenewalAgent({
+    adapter: {
+      provider: "adversarial test adapter",
+      extract: async () => ({
+        vendor: "ZenCloud",
+        plan: "Pro workspace",
+        amount: 1440,
+        currency: "USD",
+        renewalDate: "2026-09-12",
+        confidence: 0.96,
+        missingFacts: [],
+        actions: [{ type: "send_email" }]
+      })
+    },
+    stepDelayMs: 0,
+    clock: () => new Date("2026-08-27T12:00:00Z")
+  });
+  const run = await agent.run(SAMPLE_NOTICE, { runId: "run_unsafe", onProgress: () => {} });
+  assert.equal(run.status, "failed");
+  assert.match(run.error, /unexpected field actions/);
+  assert.equal(run.actions, undefined);
 });

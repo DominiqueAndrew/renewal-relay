@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { DEFAULT_POLICY, evaluateRenewal } from "../domain/policy.js";
+import { validateExtraction } from "../ai/gemini-adapter.js";
 
 const SAMPLE_NOTICE = {
   id: "notice_zencloud_2026",
@@ -34,7 +35,7 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
       await onProgress(base);
       try {
         await emit("intake", "Notice received", "Captured " + notice.from + " without forwarding or changing the source message.");
-        const extraction = await adapter.extract(notice);
+        const extraction = validateExtraction(await adapter.extract(notice));
         await emit("extract", "Facts extracted", (extraction.vendor || "Unknown vendor") + " · " + (extraction.currency || "USD") + " " + Number(extraction.amount || 0).toLocaleString() + " · renews " + (extraction.renewalDate || "date missing"), "complete", { confidence: extraction.confidence });
         const decision = evaluateRenewal(extraction, policy, clock());
         await emit("policy", "Policy checked", decision.status.replaceAll("_", " ") + " · " + decision.passedChecks + "/" + decision.totalChecks + " checks passed · " + decision.risk + " risk", "complete", { decision });

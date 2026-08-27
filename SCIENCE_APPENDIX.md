@@ -59,6 +59,7 @@ dependency supply-chain state.
 | --- | --- | --- |
 | The system runs as an asynchronous background workflow. | `POST /api/runs` returns `202` and a run ID; `src/server.js` starts `agent.run` without awaiting it; `test/server.test.js` polls until completion. | Demonstrated locally and in the Docker image; Cloud Run deployment is prepared but not live-verified. |
 | Gemini is limited to fact extraction with a constrained JSON shape. | `src/ai/gemini-adapter.js` uses `@google/genai`, `responseMimeType: application/json`, and `EXTRACTION_SCHEMA`; the prompt forbids invention and records missing facts. | API execution was not performed here because no key was available. The deterministic adapter is explicitly labeled synthetic fallback. |
+| Model output cannot directly smuggle action instructions into the workflow. | `validateExtraction` allow-lists fact fields, bounds scalar values, validates real ISO dates, and rejects inconsistent or unknown fields before the agent evaluates policy; adversarial tests cover an injected `actions` field. | This is a local validation boundary, not a substitute for provider isolation, authentication, or an external integration's authorization checks. |
 | Policy decisions are inspectable and independent of model prose. | `src/domain/policy.js` contains pure amount, time, cancellation-window, and owner checks; `test/agent.test.js` fixes the clock for the threshold test. | Thresholds are product-policy assumptions, not learned or empirically optimal values. |
 | The agent fails closed on extraction failure. | `createRenewalAgent` catches adapter errors, emits a failed timeline event, and returns no action packet; the test asserts no `actions`. | Persistence callback failures are operational errors and should be monitored in a production deployment. |
 | The workflow produces meaningful internal side effects. | The run store records a source notice, timeline, decision, four action records, and guardrails; the UI renders them separately. | “Calendar hold” and “approval task” are staged records in this prototype, not mutations to a real external calendar/task service. The vendor draft is always `sendable: false`. |
@@ -116,13 +117,16 @@ Missing fields are explicit and cause review rather than imputation.
 
 1. The source notice is read-only; no source message is forwarded or edited.
 2. The model extracts facts; deterministic code owns the financial and deadline decision.
-3. A failed extraction produces a failed run and no actions.
-4. All current actions are reversible internal records. No external message is sent,
+3. The extraction boundary accepts only the allow-listed fact shape; malformed dates,
+   out-of-range numbers, unknown fields, and contradictory missing-fact declarations fail
+   closed before policy evaluation.
+4. A failed extraction produces a failed run and no actions.
+5. All current actions are reversible internal records. No external message is sent,
    no contract is cancelled, and no financial commitment is approved automatically.
-5. The vendor draft is marked `sendable: false` in the action metadata.
-6. Local execution uses synthetic ZenCloud data and a memory store. A configured
+6. The vendor draft is marked `sendable: false` in the action metadata.
+7. Local execution uses synthetic ZenCloud data and a memory store. A configured
    deployment can use Firestore, but credentials are not committed.
-7. Production deployment should bind `GEMINI_API_KEY` through Secret Manager and use
+8. Production deployment should bind `GEMINI_API_KEY` through Secret Manager and use
    least-privilege service-account permissions; the README records this as a
    deployment requirement, not as completed evidence.
 
@@ -143,9 +147,11 @@ The test set contains eight cases:
 5. health endpoint responds with the Cloud Run-ready service identity;
 6. HTTP run creation is queued asynchronously and reaches completion;
 7. incomplete HTTP notices are rejected before queueing;
-8. the fixed-clock policy matrix conforms at the amount boundary and across missing/urgent facts.
+8. the fixed-clock policy matrix conforms at the amount boundary and across missing/urgent facts;
+9. the extraction validator rejects unknown action fields, impossible dates, and out-of-range confidence;
+10. an adapter returning an unsafe extraction shape fails closed before any action is staged.
 
-Observed result: **8 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **10 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`
