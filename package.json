@@ -13,7 +13,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^7.11.0",
-    "@google/genai": "^1.18.0"
+    "@google-cloud/firestore": "9.0.0",
+    "@google/genai": "2.19.0"
   }
 }

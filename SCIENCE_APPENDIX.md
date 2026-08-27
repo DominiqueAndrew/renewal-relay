@@ -46,6 +46,13 @@ other event field differs across a cached resource, the live Devpost page wins.
 - [Firestore data model](https://docs.cloud.google.com/firestore/native/docs/data-model) — official document/collection model used by the optional run store.
 - [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) and its [Playbook](https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook) — governance, mapping, measurement, and management framing for documenting risks and human-AI responsibilities. This is guidance, not a certification of this prototype.
 
+The runtime dependencies are pinned directly to `@google/genai` 2.19.0 and
+`@google-cloud/firestore` 9.0.0. In the rebuilt image, `npm audit --omit=dev`
+returned 0 vulnerabilities. There is intentionally no generated lockfile in this
+small worktree yet, so transitive resolution can still change between installs; the
+passing CI/image checks are evidence for this commit, not a promise of immutable
+dependency supply-chain state.
+
 ## 2. Claim-to-evidence map
 
 | Material claim | Evidence in this repository | Boundary / interpretation |
