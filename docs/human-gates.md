@@ -6,6 +6,10 @@ Project: [github.com/DominiqueAndrew/renewal-relay](https://github.com/Dominique
 
 Submission deadline from the live Devpost form: `2026-09-01T00:00:00Z`.
 
+Use the [demo capture receipt](demo-capture-receipt.md) to record observed SHA,
+Cloud Run revision/URL, redacted runtime proof, live Gemini evidence, public video,
+and Devpost status as separate fields.
+
 This checklist contains actions that require the entrant’s account access,
 personal facts, consent, or final judgment. The repository does not mark any item
 complete on the entrant’s behalf.

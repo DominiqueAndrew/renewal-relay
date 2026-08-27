@@ -5,6 +5,9 @@ The local path is deterministic and synthetic; the final public recording must
 replace the local proof with a real, authorized Cloud Run URL and visible runtime
 evidence before submission.
 
+Record the final pass in the [demo capture receipt](demo-capture-receipt.md); it
+keeps local rehearsal evidence separate from live runtime and submission status.
+
 ## Local rehearsal
 
 ```bash
