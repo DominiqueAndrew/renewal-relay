@@ -44,6 +44,7 @@ other event field differs across a cached resource, the live Devpost page wins.
 - [Cloud Run container runtime contract](https://docs.cloud.google.com/run/docs/container-contract) — the ingress process must listen on `0.0.0.0` and the provided port.
 - [Cloud Run Node.js deployment quickstart](https://docs.cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-nodejs-service) — official source for the source deployment path and `PORT` behavior.
 - [Firestore data model](https://docs.cloud.google.com/firestore/native/docs/data-model) — official document/collection model used by the optional run store.
+- [NIST Secure Hash Standard FIPS 180-4](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf) — official definition and properties of SHA-256 message digests used for source-content fingerprints.
 - [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) and its [Playbook](https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook) — governance, mapping, measurement, and management framing for documenting risks and human-AI responsibilities. This is guidance, not a certification of this prototype.
 
 The runtime dependencies are pinned directly to `@google/genai` 2.19.0 and
@@ -64,6 +65,7 @@ normal supply-chain assumptions.
 | The agent fails closed on extraction failure. | `createRenewalAgent` catches adapter errors, emits a failed timeline event, and returns no action packet; the test asserts no `actions`. | Persistence callback failures are operational errors and should be monitored in a production deployment. |
 | The workflow produces meaningful internal side effects. | The run store records a source notice, timeline, decision, four action records, and guardrails; the UI renders them separately. | “Calendar hold” and “approval task” are staged records in this prototype, not mutations to a real external calendar/task service. The vendor draft is always `sendable: false`. |
 | Replaying a run does not create ambiguous action identities. | Each action carries a stable `renewal-relay:<runId>:<actionId>` idempotency key, `record_only` execution mode, and `retrySafe` marker; the memory store and Firestore adapter upsert the enclosing run by ID, and the test repeats the same run ID. | This proves safe identity/replay semantics for internal records only. Any future external connector still needs provider-specific idempotency, authorization, and retry contract tests. |
+| A stored run can be checked against the source content that produced it. | `fingerprintNotice` canonicalizes the source subject, sender, received time, and body in a fixed order and records a SHA-256 digest on the run and audit action; tests prove same-content stability and changed-content divergence. | This is an integrity fingerprint, not authenticity, a digital signature, or proof that the source was not already manipulated before intake. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
 | The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, ten automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
@@ -124,12 +126,14 @@ Missing fields are explicit and cause review rather than imputation.
 4. A failed extraction produces a failed run and no actions.
 5. Every staged action has a stable per-run idempotency key and `record_only` execution
    mode; replaying the same run ID preserves action identity.
-6. All current actions are reversible internal records. No external message is sent,
+6. Each run stores a SHA-256 fingerprint of the canonical source content, and the audit
+   record carries the same value for later integrity comparison.
+7. All current actions are reversible internal records. No external message is sent,
    no contract is cancelled, and no financial commitment is approved automatically.
-7. The vendor draft is marked `sendable: false` in the action metadata.
-8. Local execution uses synthetic ZenCloud data and a memory store. A configured
+8. The vendor draft is marked `sendable: false` in the action metadata.
+9. Local execution uses synthetic ZenCloud data and a memory store. A configured
    deployment can use Firestore, but credentials are not committed.
-9. Production deployment should bind `GEMINI_API_KEY` through Secret Manager and use
+10. Production deployment should bind `GEMINI_API_KEY` through Secret Manager and use
    least-privilege service-account permissions; the README records this as a
    deployment requirement, not as completed evidence.
 
@@ -141,7 +145,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains thirteen cases:
+The test set contains fourteen cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
@@ -155,9 +159,10 @@ The test set contains thirteen cases:
 10. an adapter returning an unsafe extraction shape fails closed before any action is staged;
 11. failed UI runs expose a safe retry state and hide outputs;
 12. completed UI runs alone expose the decision and staged actions;
-13. queued/running UI states expose a busy label and suppress duplicate-run affordances.
+13. queued/running UI states expose a busy label and suppress duplicate-run affordances;
+14. source fingerprints are stable for the same content and change when content changes.
 
-Observed result: **13 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **14 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`

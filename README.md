@@ -9,6 +9,7 @@ It reads one renewal notice, extracts the facts with Gemini 3.5 Flash, checks a 
 The output is not a summary. It is a supervised action packet:
 
 - source notice captured read-only
+- source fingerprint recorded for audit and replay verification
 - amount, renewal date, cancellation window, owner, and confidence extracted
 - financial threshold and deadline checks evaluated by code, not by the model
 - calendar review hold and approval task staged as explicit records

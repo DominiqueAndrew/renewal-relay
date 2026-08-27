@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createDemoAdapter, validateExtraction } from "../src/ai/gemini-adapter.js";
-import { createRenewalAgent, SAMPLE_NOTICE } from "../src/agent/renewal-agent.js";
+import { createRenewalAgent, fingerprintNotice, SAMPLE_NOTICE } from "../src/agent/renewal-agent.js";
 import { DEFAULT_POLICY, evaluateRenewal } from "../src/domain/policy.js";
 
 test("demo adapter extracts the synthetic renewal notice without inventing facts", async () => {
@@ -29,6 +29,9 @@ test("agent completes the full action packet and records guardrails", async () =
   assert.equal(run.decision.passedChecks, 3);
   assert.equal(run.actions.length, 4);
   assert.equal(run.actions.find((item) => item.id === "vendor_draft").metadata.sendable, false);
+  assert.match(run.sourceFingerprint, /^[a-f0-9]{64}$/);
+  assert.equal(run.sourceFingerprint, fingerprintNotice(SAMPLE_NOTICE));
+  assert.equal(run.actions.find((item) => item.id === "audit_record").metadata.sourceFingerprint, run.sourceFingerprint);
   assert.deepEqual(run.actions.map((item) => item.metadata.idempotencyKey), [
     "renewal-relay:run_test:calendar_hold",
     "renewal-relay:run_test:approval_task",
@@ -38,8 +41,16 @@ test("agent completes the full action packet and records guardrails", async () =
   assert.ok(run.actions.every((item) => item.metadata.execution === "record_only" && item.metadata.retrySafe === true));
   const replay = await agent.run(SAMPLE_NOTICE, { runId: "run_test", onProgress: () => {} });
   assert.deepEqual(replay.actions.map((item) => item.metadata.idempotencyKey), run.actions.map((item) => item.metadata.idempotencyKey));
+  assert.equal(replay.sourceFingerprint, run.sourceFingerprint);
   assert.match(run.guardrails.join(" "), /No auto-cancel/);
   assert.ok(events.length >= 5);
+});
+
+test("source fingerprints are stable for the same notice and change with content", () => {
+  const sameNotice = { ...SAMPLE_NOTICE };
+  const changedNotice = { ...SAMPLE_NOTICE, body: SAMPLE_NOTICE.body + " Updated." };
+  assert.equal(fingerprintNotice(sameNotice), fingerprintNotice(SAMPLE_NOTICE));
+  assert.notEqual(fingerprintNotice(changedNotice), fingerprintNotice(SAMPLE_NOTICE));
 });
 
 test("agent fails closed when extraction is unavailable and stages no actions", async () => {

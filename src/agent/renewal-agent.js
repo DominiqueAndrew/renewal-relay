@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { DEFAULT_POLICY, evaluateRenewal } from "../domain/policy.js";
 import { validateExtraction } from "../ai/gemini-adapter.js";
 
@@ -11,6 +11,16 @@ const SAMPLE_NOTICE = {
 };
 
 const pause = (ms) => ms > 0 ? new Promise((resolve) => setTimeout(resolve, ms)) : Promise.resolve();
+
+export function fingerprintNotice(notice) {
+  const canonical = JSON.stringify({
+    subject: notice?.subject ?? "",
+    from: notice?.from ?? "",
+    receivedAt: notice?.receivedAt ?? "",
+    body: notice?.body ?? ""
+  });
+  return createHash("sha256").update(canonical, "utf8").digest("hex");
+}
 
 function action(runId, id, type, title, detail, status = "prepared", metadata = {}) {
   return {
@@ -35,6 +45,7 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
     sampleNotice: SAMPLE_NOTICE,
     async run(notice, { runId = "run_" + randomUUID(), onProgress = async () => {} } = {}) {
       const createdAt = clock().toISOString();
+      const sourceFingerprint = fingerprintNotice(notice);
       const timeline = [];
       const emit = async (step, label, detail, state = "complete", extra = {}) => {
         const event = { id: step + "_" + (timeline.length + 1), step, label, detail, state, at: clock().toISOString(), ...extra };
@@ -43,7 +54,7 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
         await pause(stepDelayMs);
       };
 
-      const base = { id: runId, createdAt, status: "running", notice, timeline, provider: adapter.provider };
+      const base = { id: runId, createdAt, status: "running", notice, sourceFingerprint, timeline, provider: adapter.provider };
       await onProgress(base);
       try {
         await emit("intake", "Notice received", "Captured " + notice.from + " without forwarding or changing the source message.");
@@ -56,11 +67,11 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
           action(runId, "calendar_hold", "calendar", "Calendar hold staged", "Prepared a renewal review hold · " + (extraction.vendor || "vendor") + " · " + (extraction.renewalDate || "date to confirm"), "staged", { date: extraction.renewalDate }),
           action(runId, "approval_task", "task", "Approval task staged", "Prepared for " + policy.owner + "; due " + (extraction.cancelByDate || extraction.renewalDate || "date to confirm"), "staged", { assignee: policy.ownerEmail, dueDate: extraction.cancelByDate || extraction.renewalDate }),
           action(runId, "vendor_draft", "draft", "Vendor reply drafted", decision.status === "REVIEW_REQUIRED" ? "Asks for confirmation before any renewal or cancellation." : "Requests final approval before the renewal is committed.", "drafted", { sendable: false }),
-          action(runId, "audit_record", "audit", "Audit record written", "Stores source, extracted facts, policy result, and all reversible actions.", "recorded", { immutable: true })
+          action(runId, "audit_record", "audit", "Audit record written", "Stores source fingerprint, extracted facts, policy result, and all reversible actions.", "recorded", { immutable: true, sourceFingerprint })
         ];
         await emit("act", "Actions staged", actions.length + " reversible action records prepared; no external message was sent.", "complete", { actions });
         const completedAt = clock().toISOString();
-        const result = { ...base, status: "complete", completedAt, extraction, decision, actions, timeline: [...timeline], guardrails: ["No auto-send", "No auto-cancel", "Human approval required for financial commitment", "Synthetic notice data only"] };
+        const result = { ...base, status: "complete", completedAt, extraction, decision, actions, timeline: [...timeline], guardrails: ["No auto-send", "No auto-cancel", "Human approval required for financial commitment", "Source fingerprint recorded", "Synthetic notice data only"] };
         await onProgress(result);
         return result;
       } catch (error) {
