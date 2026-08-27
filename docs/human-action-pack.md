@@ -2,6 +2,12 @@
 
 This is the smallest path from the verified local slice to a truthful live demo and Devpost submission. Every step requires the entrant's own account access or consent. Never paste credentials into chat, commit them, or mark a gate complete from source code alone.
 
+## Live Devpost checkpoint
+
+The Devpost Hackathons plugin refreshed the official event surfaces at `2026-08-27T15:30:13Z`: the event is `submissions_open`, the deadline is `2026-09-01T00:00:00Z` (August 31 at 5:00 PM Pacific), and the current form still reports `can_register: true` and `already_registered: false`. The latest announcement says Google Cloud credit delivery is delayed; credits are not guaranteed, so use the credential-free fallback below if access is not approved.
+
+If requesting the advertised credits, open the live [Resources tab](https://allthingsagentichackathon.devpost.com/resources) and use the link shown there. The current rules text and Resources block expose different Google Forms URLs, so do not hard-code either one or claim that credits were requested/approved without the entrant's own receipt.
+
 ## Inputs the human must provide
 
 | Input | Why it is needed | Safe evidence to retain |
@@ -60,7 +66,7 @@ Expected: APIs are enabled and the `(default)` database is in the selected regio
 
 ### 3. Create the Gemini secret without exposing it
 
-In Google AI Studio, open **API keys**, choose **Create API key**, and keep the key in approved secret management. In Google Cloud Console use **Secret Manager -> Create secret -> Name: `gemini-api-key` -> enter/upload the value -> Create secret**. Confirm that version `1` exists without opening or recording its value.
+In [Google AI Studio API keys](https://aistudio.google.com/app/apikey), choose **Create API key**, and keep the key in approved secret management. In Google Cloud Console use **Secret Manager -> Create secret -> Name: `gemini-api-key` -> enter/upload the value -> Create secret**. Confirm that version `1` exists without opening or recording its value.
 
 The CLI alternative uses a protected local file, never a command-line value:
 
@@ -126,15 +132,15 @@ Publish publicly on YouTube or Vimeo, verify the URL in a private browser window
 
 ## Devpost registration and submission path
 
-The live registration form currently reports `can_register: true` and `already_registered: false`. On the event page, select **Register**, then complete only with the entrant's own facts:
+On the event page, select **Register**, then complete only with the entrant's own facts:
 
-- Team preference: **Working solo** if that is the entrant's choice.
-- Required Discord username: the entrant supplies it.
+- Team preference: **Working solo**, **Looking for teammates**, or **Already have a team**; choose only the entrant's actual intent.
+- Required Discord username: enter the entrant's value, or the form's stated `NA if not applicable`.
 - **Have you signed up for GEAR?**: truthful **Yes** or **No**.
-- Read the live rules, Devpost terms, and eligibility text; only the entrant may check the two required **I agree** boxes.
+- Read the [official rules](https://allthingsagentichackathon.devpost.com/rules), [Devpost terms](https://info.devpost.com/terms), and eligibility text. Only the entrant may check the two required **I agree** boxes: one authorizes Google Cloud communications and the other acknowledges Google's Privacy Policy.
 - Leave optional employment information blank unless the entrant chooses to provide it.
 
-After registration, open the project submission form and use [devpost-submission-pack.md](devpost-submission-pack.md) for the project text and field map. Enter the actual country, public video URL, live hosted URL if available, verified Google service/model evidence, and architecture file. Select `Taskmaster`. Review every claim, then submit only after the entrant's explicit final confirmation. Record the returned status/ID/URL in the receipt.
+After registration, open the project submission form and use [devpost-submission-pack.md](devpost-submission-pack.md) for the project text and field map. Enter the actual country, public video URL, live hosted URL if available, verified Google service/model evidence, and architecture file. Select `Taskmaster`; the Google SDK and Cloud service fields are currently multi-select. Review every claim, then submit only after the entrant's explicit final confirmation. Record the returned status/ID/URL in the receipt.
 
 ## Evidence decision rule
 

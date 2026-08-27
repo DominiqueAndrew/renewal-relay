@@ -1,6 +1,6 @@
 # Devpost submission answer pack
 
-Snapshot: 2026-08-27, Europe/Paris. This is a copy-paste draft for the live All Things Agentic Hackathon form, refreshed through the Devpost Hackathons plugin. Devpost remains authoritative if the form changes. Do not treat a placeholder as an answer and do not submit without the entrant's own confirmations.
+Snapshot: 2026-08-27, Europe/Paris. Live plugin refresh: 2026-08-27T15:30:13Z. This is a copy-paste draft for the live All Things Agentic Hackathon form, refreshed through the Devpost Hackathons plugin. Devpost remains authoritative if the form changes. Do not treat a placeholder as an answer and do not submit without the entrant's own confirmations.
 
 ## Project content
 
@@ -15,6 +15,8 @@ Snapshot: 2026-08-27, Europe/Paris. This is a copy-paste draft for the live All 
 | Architecture diagram | Upload `docs/architecture.svg` from the exact public release commit. |
 | Demo video | Human must publish a public YouTube or Vimeo URL after recording the live Cloud Run proof. |
 
+Live deliverable contract: a public demo video is required; a hosted website URL and zip file are not required by the current form.
+
 ## Required custom fields
 
 The IDs are the live form identifiers observed on 2026-08-27; labels and options should be checked once more in the form immediately before submission.
@@ -24,16 +26,16 @@ The IDs are the live form identifiers observed on 2026-08-27; labels and options
 | 28083 | Submitter Type | `Individuals`, only after the entrant confirms the personal eligibility facts. |
 | 28084 | Submitter country of residence | Human-only: select the entrant's actual country of residence; never infer it. |
 | 28085 | Which Category are you submitting to? | `Taskmaster` |
-| 28086 | Organization name | Leave blank for an individual entry if the form conditionally hides it; if the form requires it, the entrant must supply the truthful organization name. |
+| 28086 | If submitting on behalf of an Organization, what is the Organization name? | Leave blank for an individual entry if the form conditionally hides it; if the form requires it, the entrant must supply the truthful organization name. |
 | 28087 | What date did you start this project? | `08-27-26`, supported by initial commit `6208e5384f736801bd4d376fc8c3fd255beb642e` at `2026-08-27T15:26:43+02:00`. |
 | 28141 | URL to your public or private code repo | `https://github.com/DominiqueAndrew/renewal-relay` |
 | 28089 | Did you add Reproducible Testing instructions to your README? | `Yes` |
 | 28088 | Hosted project URL if available | Leave blank until a real Cloud Run URL exists; optional in the observed live form. |
 | 28090 | Testing instructions optional | `Clone the repo, run npm ci, npm test, npm run check, npm run eval, and npm run check:secrets. See README.md.` |
-| 28091 | Which Google SDK did you use? | `Google GenAI SDK (google-genai)` |
-| 28142 | Which Google Cloud Service(s) did you use? | The live snapshot reports a dropdown with `Cloud Run`, `Cloud SQL`, `Firestore`, `Google Kubernetes (GKE)`, and `Pub/Sub`, without a multiple-select flag. Select the actually verified service in the live form; `Cloud Run` is the intended primary answer, and mention Firestore in the project description if separately verified. |
+| 28091 | Which Google SDK did you use? | The live field is multi-select. Select `Google GenAI SDK (google-genai)` only. |
+| 28142 | Which Google Cloud Service (s) did you use? | The live field is multi-select with `Cloud Run`, `Cloud SQL`, `Firestore`, `Google Kubernetes (GKE)`, and `Pub/Sub`. Select every service actually used and evidenced; the intended final selection is `Cloud Run` + `Firestore` only after live deployment and Firestore read-back are verified. |
 | 28092 | Architecture diagram | `docs/architecture.svg` upload |
-| 28143 | Which Google AI Models did you use? | `Gemini 3.5 Flash (gemini-3.5-flash)` only after a live Gemini-backed run is verified; until then this remains an implemented-path claim, not runtime proof. |
+| 28143 | Which Google AI Models did you use? Gemini 3.5 or newer is REQUIRED. | `Gemini 3.5 Flash (gemini-3.5-flash)` only after a live Gemini-backed run is verified. No additional model is claimed. |
 
 Leave the Startup Prize organization/email fields and optional bonus blog/social fields blank unless the entrant supplies truthful values and explicitly opts in.
 
@@ -54,6 +56,10 @@ Leave the Startup Prize organization/email fields and optional bonus blog/social
 - Record and publish the required public video; then enter its URL and any verified hosted URL.
 - Review every field in the live form and perform the final submission. No submission is claimed by this repository.
 
+## Live registration checkpoint
+
+The live form reports `can_register: true`, `already_registered: false`, and team choices `Working solo`, `Looking for teammates`, and `Already have a team`. Required registration inputs are the entrant's Discord username (the form says `NA if not applicable`), truthful GEAR `Yes`/`No`, and two separate required agreement checkboxes: Google Cloud communications and personal-data processing under Google's Privacy Policy. The optional employment organization may be left blank. The form links the [official rules](https://allthingsagentichackathon.devpost.com/rules) and [Devpost terms](https://info.devpost.com/terms).
+
 ## Evidence boundary
 
-The implementation/evidence boundary is [`2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a`](https://github.com/DominiqueAndrew/renewal-relay/commit/2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a); later commits are documentation-only. GitHub Actions run [33086143961](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33086143961) passed on that SHA. Local conformance is 19/19 tests and 8/8 policy-evaluation cases. These facts do not substitute for live Cloud Run, live Gemini, a public video, personal eligibility, or Devpost submission proof; see the [release-readiness review](release-readiness.md) and [human-gate handoff](human-gates.md).
+The current public implementation/evidence commit is [`417a2b2ea8a6d435dbe736328d475f692f3b147f`](https://github.com/DominiqueAndrew/renewal-relay/commit/417a2b2ea8a6d435dbe736328d475f692f3b147f); its public GitHub Actions run [33087945307](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33087945307) passed. Local conformance is 20/20 tests and 8/8 policy-evaluation cases. The container receipt remains separately bound to its older image boundary. These facts do not substitute for live Cloud Run, live Gemini, a public video, personal eligibility, or Devpost submission proof; see the [release-readiness review](release-readiness.md) and [human-gate handoff](human-gates.md).

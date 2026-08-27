@@ -2,10 +2,10 @@
 
 Snapshot: 2026-08-27, Europe/Paris
 
-Implementation/evidence boundary: [`2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a`](https://github.com/DominiqueAndrew/renewal-relay/commit/2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a)
+Implementation/evidence boundary: [`417a2b2ea8a6d435dbe736328d475f692f3b147f`](https://github.com/DominiqueAndrew/renewal-relay/commit/417a2b2ea8a6d435dbe736328d475f692f3b147f)
 Review decision: **repository ready with notes; overall submission blocked on human/platform gates**
 
-This is a release review, not a claim of deployment or submission. The implementation/evidence boundary is the last public commit reviewed with CI; no version tag exists. Documentation-only commits may be layered on top without changing that reviewed code boundary. The first repository commit is `2026-08-27T15:26:43+02:00`, inside the live submission period.
+This is a release review, not a claim of deployment or submission. The implementation/evidence boundary is the last public commit reviewed with CI; no version tag exists. The first repository commit is `2026-08-27T15:26:43+02:00`, inside the live submission period.
 
 ## Live event contract
 
@@ -22,13 +22,13 @@ Refreshed through the Devpost Hackathons plugin on 2026-08-27. Devpost remains a
 
 ## Verified at the release boundary
 
-- The public repository contained the reviewed implementation/evidence boundary: `git ls-remote renewal refs/heads/main` returned `2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a` at the time of review; later documentation-only commits do not alter the implementation boundary.
-- GitHub Actions run [33086143961](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33086143961), job `98566186067`, passed on the exact release SHA. It runs `npm ci`, tests, static checks, and the tracked-secret scan.
-- `npm test`: 19 passed, 0 failed.
+- The public repository contains the reviewed implementation/evidence boundary: `git ls-remote renewal refs/heads/main` returned `417a2b2ea8a6d435dbe736328d475f692f3b147f`.
+- GitHub Actions run [33087945307](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33087945307), job `98572656127`, passed on the exact release SHA. It runs `npm ci`, tests, static checks, and the tracked-secret scan.
+- `npm test`: 20 passed, 0 failed.
 - `npm run check`: passed, including server, AI adapter, agent, public state, browser bundle, runtime checker, and secret checker syntax/behavior checks.
 - `npm run eval`: 8/8 policy-conformance cases; status accuracy `1.0`; review recall `1.0`; ready precision `1.0`.
-- `npm run check:secrets`: 0 findings across 32 tracked files; no secret value was emitted.
-- The release container evidence at [`docs/release-receipt.md`](release-receipt.md) records a successful Docker smoke run (`202` to `complete`), `npm audit --omit=dev` with 0 vulnerabilities, local `/api/health` verification, source-fingerprint matching, four staged actions, and `REVIEW_REQUIRED`. That container was built at implementation boundary `2addfdc`; subsequent public commits are documentation-only.
+- `npm run check:secrets`: 0 findings across 38 tracked files; no secret value was emitted.
+- The release container evidence at [`docs/release-receipt.md`](release-receipt.md) records a successful Docker smoke run (`202` to `complete`), `npm audit --omit=dev` with 0 vulnerabilities, local `/api/health` verification, source-fingerprint matching, four staged actions, and `REVIEW_REQUIRED`. That container was built at the older implementation boundary `2addfdc`; the current UI commit was validated by public CI and responsive screenshots but not rebuilt into a new container receipt.
 - The responsive UI review covers mobile, tablet, laptop, desktop, large-desktop, and wide-desktop geometry, including the failed-run state: [`docs/ui-review.md`](ui-review.md).
 
 ## Open blockers

@@ -4,7 +4,7 @@ Snapshot: 2026-08-27 (Europe/Paris)
 
 Project: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay)
 
-Submission deadline from the live Devpost form: `2026-09-01T00:00:00Z`.
+Submission deadline from the live Devpost form: `2026-09-01T00:00:00Z` (August 31 at 5:00 PM Pacific). The plugin refresh on 2026-08-27 reports `submissions_open`.
 
 Use the [demo capture receipt](demo-capture-receipt.md) to record observed SHA,
 Cloud Run revision/URL, redacted runtime proof, live Gemini evidence, public video,
@@ -48,11 +48,11 @@ complete on the entrant’s behalf.
 - [ ] Confirm entrant type, country of residence, solo/team status, eligibility,
   and required rules/privacy/terms agreements in the live Devpost form.
 - [ ] Use category `Taskmaster`, project start date `08-27-26`, repository URL,
-  reproducible README answer `Yes`, `Google GenAI SDK`, the Google Cloud service
-  actually verified in the deployment (intended primary: `Cloud Run`), architecture
-  diagram `docs/architecture.svg`, and Gemini model `gemini-3.5-flash` where the form
-  asks for them. Mention `Firestore` only if it is separately verified and the live
-  form permits it.
+  reproducible README answer `Yes`, `Google GenAI SDK`, every Google Cloud service
+  actually verified in the deployment (intended final selection: `Cloud Run` +
+  `Firestore` after both are evidenced), architecture diagram
+  `docs/architecture.svg`, and Gemini model `gemini-3.5-flash` where the form asks
+  for them. The current SDK and Cloud service fields are multi-select.
 - [ ] Add the public demo-video URL. A hosted project URL is optional in the live
   form; a zip upload is not required by the current form snapshot.
 - [ ] Review the generated project description, links, permissions, and claims;

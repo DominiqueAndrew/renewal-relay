@@ -2,7 +2,9 @@
 
 Captured: 2026-08-27 (Europe/Paris)
 
-Evidence target (implementation boundary): `2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a`
+Container evidence target: `2addfdc4e74320fcfa6c53ea934b5aaa044dbf0a`
+
+Current UI/evidence commit: [`417a2b2ea8a6d435dbe736328d475f692f3b147f`](https://github.com/DominiqueAndrew/renewal-relay/commit/417a2b2ea8a6d435dbe736328d475f692f3b147f), verified by public CI run [33087945307](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33087945307).
 
 Public repository: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay)
 
@@ -19,7 +21,7 @@ Public repository: [github.com/DominiqueAndrew/renewal-relay](https://github.com
 | Runtime smoke | Fresh container `/api/health`, `/api/demo`, and `/api/runs` | Health 200; synthetic fallback labeled; queue 202; final `complete`; `REVIEW_REQUIRED`; 4 actions; all `record_only`; vendor draft non-sendable; source fingerprint present |
 | Runtime proof contract | `CLOUD_RUN_URL=http://127.0.0.1:18083 npm run verify:runtime` | `verified`; local `/api/health` 200; no live Cloud Run URL was supplied |
 | Tracked secret hygiene | `npm run check:secrets` | 0 findings across 38 tracked files |
-| Responsive UI | [responsive UI review](ui-review.md) | Six required viewports passed; CTA visible; no horizontal overflow; 4 completed action cards |
+| Responsive UI follow-up | [responsive UI review](ui-review.md) on current UI/evidence commit | Six required viewports passed for completed and failed run-panel states; no horizontal overflow; provenance is hidden on failure |
 
 ## Judge-facing claim boundary
 
@@ -27,8 +29,9 @@ The reproducible local/container slice is complete: a synthetic renewal notice i
 extracted, checked by deterministic policy code, and turned into four reversible
 internal records behind a human approval gate. The UI and smoke test prove those
 states locally. The service is Cloud Run-ready, but this receipt does not claim a
-live Cloud Run revision, Firestore persistence, or Gemini API request. Documentation
-commits after the evidence target do not change the implementation boundary.
+live Cloud Run revision, Firestore persistence, or Gemini API request. The current
+UI follow-up is separately identified above and does not change the older container
+image identity.
 
 ## Open gates
 

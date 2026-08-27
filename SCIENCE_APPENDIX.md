@@ -4,7 +4,7 @@ This appendix keeps material claims testable and separates observed evidence fro
 design assumptions. It is intentionally more technical than the main README.
 
 Snapshot date: 2026-08-27 (Europe/Paris). The Devpost Hackathons plugin returned
-the event as `submissions_open` at 2026-08-27T13:49:30Z. The project is a synthetic,
+the event as `submissions_open` at 2026-08-27T15:30:13Z. The project is a synthetic,
 reproducible vertical slice; it has not been connected to a real mailbox, calendar,
 task system, vendor, Gemini API key, or Google Cloud project in this worktree.
 
@@ -32,7 +32,10 @@ registration form, announcements, and submission fields. The relevant snapshot w
 - submission: a demo video is required; a hosted URL and zip are not required by the
   live form, while category, country, project start date, repository, README testing
   answer, Google SDK, Google Cloud service, architecture diagram, and Gemini model are
-  required fields.
+  required fields. The Google SDK and Google Cloud service fields are currently
+  multi-select fields.
+- latest announcement: the organizer reported delayed Google Cloud credit delivery;
+  credits are not guaranteed, so the credential-free path remains the safe fallback.
 
 The plugin's dates endpoint and rules text converge on the deadline above. Where any
 other event field differs across a cached resource, the live Devpost page wins.
@@ -70,7 +73,7 @@ normal supply-chain assumptions.
 | Cloud runtime proof can be repeated without exposing credentials. | `scripts/verify-runtime.mjs` checks only a supplied URL's `/api/health` contract and returns redacted `verified`, `blocked`, or `failed` JSON; unit tests cover missing URL, success, and contract failure. | No URL was available in this worktree, so live Cloud Run, revision, IAM, and Firestore proof remain open. |
 | Tracked secrets are rejected before publication. | `scripts/check-secrets.mjs` scans tracked files for high-confidence private-key and token formats, reports only file/line/pattern identifiers, and runs in GitHub Actions; tests cover detection without value echoing. | This is a lightweight detector, not a complete secret-management program; provider-side scanning and credential rotation remain deployment responsibilities. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
-| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, nineteen automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
+| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, twenty automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
 ## 3. Decision model
 
@@ -148,7 +151,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains nineteen cases:
+The test set contains twenty cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. configured Gemini provider metadata reports the configured model without a request;
@@ -163,14 +166,15 @@ The test set contains nineteen cases:
 11. an adapter returning an unsafe extraction shape fails closed before any action is staged;
 12. failed UI runs expose a safe retry state and hide outputs;
 13. completed UI runs alone expose the decision and staged actions;
-14. queued/running UI states expose a busy label and suppress duplicate-run affordances;
-15. source fingerprints are stable for the same content and change when content changes;
-16. the runtime proof checker blocks a missing URL;
-17. the runtime proof checker verifies the health contract without copying query credentials;
-18. the runtime proof checker fails closed on a bad response;
-19. the tracked-file secret scan detects high-confidence formats without echoing values.
+14. completed provenance rendering requires a valid fingerprint and redacts it;
+15. queued/running UI states expose a busy label and suppress duplicate-run affordances;
+16. source fingerprints are stable for the same content and change when content changes;
+17. the runtime proof checker blocks a missing URL;
+18. the runtime proof checker verifies the health contract without copying query credentials;
+19. the runtime proof checker fails closed on a bad response;
+20. the tracked-file secret scan detects high-confidence formats without echoing values.
 
-Observed result: **19 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **20 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`
@@ -220,8 +224,9 @@ The live judging criteria returned by the plugin are Innovation & Operational Ut
   `6208e5384f736801bd4d376fc8c3fd255beb642e` (`2026-08-27T15:26:43+02:00`).
 - Repository: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay); the exact verification SHA is recorded in each CI/release receipt.
 - Reproducible README: `Yes`.
-- Google SDK: `Google GenAI SDK (google-genai)`.
-- Google Cloud services: `Cloud Run` and `Firestore` as the configured deployment path.
+- Google SDK: `Google GenAI SDK (google-genai)`; the live field is multi-select.
+- Google Cloud services: select `Cloud Run` and `Firestore` only if both are evidenced
+  in the deployment; the live field is multi-select.
 - Gemini model: `Gemini 3.5 Flash` (`gemini-3.5-flash`) in the live adapter; deterministic
   extractor is the explicit no-key local fallback.
 - Architecture diagram: `docs/architecture.svg`.
