@@ -30,3 +30,18 @@ test("agent completes the full action packet and records guardrails", async () =
   assert.match(run.guardrails.join(" "), /No auto-cancel/);
   assert.ok(events.length >= 5);
 });
+
+test("agent fails closed when extraction is unavailable and stages no actions", async () => {
+  const events = [];
+  const agent = createRenewalAgent({
+    adapter: { provider: "failing test adapter", extract: async () => { throw new Error("provider unavailable"); } },
+    stepDelayMs: 0,
+    clock: () => new Date("2026-08-27T12:00:00Z")
+  });
+  const run = await agent.run(SAMPLE_NOTICE, { runId: "run_failed", onProgress: (event) => events.push(event) });
+  assert.equal(run.status, "failed");
+  assert.equal(run.actions, undefined);
+  assert.match(run.error, /provider unavailable/);
+  assert.equal(run.timeline.at(-1).state, "failed");
+  assert.ok(events.some((event) => event.status === "failed"));
+});

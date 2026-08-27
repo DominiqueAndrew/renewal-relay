@@ -11,24 +11,20 @@ const SAMPLE_NOTICE = {
 
 const pause = (ms) => ms > 0 ? new Promise((resolve) => setTimeout(resolve, ms)) : Promise.resolve();
 
-function nowIso() {
-  return new Date().toISOString();
-}
-
 function action(id, type, title, detail, status = "prepared", metadata = {}) {
   return { id, type, title, detail, status, metadata };
 }
 
-export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelayMs = Number(process.env.AGENT_STEP_DELAY_MS || 180) } = {}) {
+export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelayMs = Number(process.env.AGENT_STEP_DELAY_MS || 180), clock = () => new Date() } = {}) {
   if (!adapter) throw new Error("An extraction adapter is required");
 
   return {
     sampleNotice: SAMPLE_NOTICE,
     async run(notice, { runId = "run_" + randomUUID(), onProgress = async () => {} } = {}) {
-      const createdAt = nowIso();
+      const createdAt = clock().toISOString();
       const timeline = [];
       const emit = async (step, label, detail, state = "complete", extra = {}) => {
-        const event = { id: step + "_" + (timeline.length + 1), step, label, detail, state, at: nowIso(), ...extra };
+        const event = { id: step + "_" + (timeline.length + 1), step, label, detail, state, at: clock().toISOString(), ...extra };
         timeline.push(event);
         await onProgress({ runId, createdAt, status: state === "failed" ? "failed" : "running", timeline: [...timeline], provider: adapter.provider });
         await pause(stepDelayMs);
@@ -40,7 +36,7 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
         await emit("intake", "Notice received", "Captured " + notice.from + " without forwarding or changing the source message.");
         const extraction = await adapter.extract(notice);
         await emit("extract", "Facts extracted", (extraction.vendor || "Unknown vendor") + " · " + (extraction.currency || "USD") + " " + Number(extraction.amount || 0).toLocaleString() + " · renews " + (extraction.renewalDate || "date missing"), "complete", { confidence: extraction.confidence });
-        const decision = evaluateRenewal(extraction, policy);
+        const decision = evaluateRenewal(extraction, policy, clock());
         await emit("policy", "Policy checked", decision.status.replaceAll("_", " ") + " · " + decision.passedChecks + "/" + decision.totalChecks + " checks passed · " + decision.risk + " risk", "complete", { decision });
 
         const actions = [
@@ -50,12 +46,12 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
           action("audit_record", "audit", "Audit record written", "Stores source, extracted facts, policy result, and all reversible actions.", "recorded", { immutable: true })
         ];
         await emit("act", "Actions executed", actions.length + " reversible actions staged; no external message was sent.", "complete", { actions });
-        const completedAt = nowIso();
+        const completedAt = clock().toISOString();
         const result = { ...base, status: "complete", completedAt, extraction, decision, actions, timeline: [...timeline], guardrails: ["No auto-send", "No auto-cancel", "Human approval required for financial commitment", "Synthetic notice data only"] };
         await onProgress(result);
         return result;
       } catch (error) {
-        const failed = { ...base, status: "failed", completedAt: nowIso(), error: error.message, timeline: [...timeline, { id: "failure_" + (timeline.length + 1), step: "failure", label: "Run stopped safely", detail: error.message, state: "failed", at: nowIso() }] };
+        const failed = { ...base, status: "failed", completedAt: clock().toISOString(), error: error.message, timeline: [...timeline, { id: "failure_" + (timeline.length + 1), step: "failure", label: "Run stopped safely", detail: error.message, state: "failed", at: clock().toISOString() }] };
         await onProgress(failed);
         return failed;
       }

@@ -36,3 +36,10 @@ test("run endpoint queues a background run and returns the completed packet", as
   assert.equal(run.status, "complete");
   assert.equal(run.actions.length, 4);
 });
+
+test("run endpoint rejects incomplete notices before queueing", async () => {
+  const response = await fetch("http://localhost:" + port + "/api/runs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ subject: "Too short", body: "Missing" }) });
+  const body = await response.json();
+  assert.equal(response.status, 400);
+  assert.equal(body.error, "Provide a subject and notice body.");
+});
