@@ -40,12 +40,12 @@ export function createRenewalAgent({ adapter, policy = DEFAULT_POLICY, stepDelay
         await emit("policy", "Policy checked", decision.status.replaceAll("_", " ") + " · " + decision.passedChecks + "/" + decision.totalChecks + " checks passed · " + decision.risk + " risk", "complete", { decision });
 
         const actions = [
-          action("calendar_hold", "calendar", "Calendar hold created", "Renewal review · " + (extraction.vendor || "vendor") + " · " + (extraction.renewalDate || "date to confirm"), "created", { date: extraction.renewalDate }),
-          action("approval_task", "task", "Approval task routed", "Assigned to " + policy.owner + "; due " + (extraction.cancelByDate || extraction.renewalDate || "date to confirm"), "created", { assignee: policy.ownerEmail, dueDate: extraction.cancelByDate || extraction.renewalDate }),
+          action("calendar_hold", "calendar", "Calendar hold staged", "Prepared a renewal review hold · " + (extraction.vendor || "vendor") + " · " + (extraction.renewalDate || "date to confirm"), "staged", { date: extraction.renewalDate }),
+          action("approval_task", "task", "Approval task staged", "Prepared for " + policy.owner + "; due " + (extraction.cancelByDate || extraction.renewalDate || "date to confirm"), "staged", { assignee: policy.ownerEmail, dueDate: extraction.cancelByDate || extraction.renewalDate }),
           action("vendor_draft", "draft", "Vendor reply drafted", decision.status === "REVIEW_REQUIRED" ? "Asks for confirmation before any renewal or cancellation." : "Requests final approval before the renewal is committed.", "drafted", { sendable: false }),
           action("audit_record", "audit", "Audit record written", "Stores source, extracted facts, policy result, and all reversible actions.", "recorded", { immutable: true })
         ];
-        await emit("act", "Actions executed", actions.length + " reversible actions staged; no external message was sent.", "complete", { actions });
+        await emit("act", "Actions staged", actions.length + " reversible action records prepared; no external message was sent.", "complete", { actions });
         const completedAt = clock().toISOString();
         const result = { ...base, status: "complete", completedAt, extraction, decision, actions, timeline: [...timeline], guardrails: ["No auto-send", "No auto-cancel", "Human approval required for financial commitment", "Synthetic notice data only"] };
         await onProgress(result);

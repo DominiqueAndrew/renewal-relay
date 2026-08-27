@@ -11,9 +11,9 @@ The output is not a summary. It is a supervised action packet:
 - source notice captured read-only
 - amount, renewal date, cancellation window, owner, and confidence extracted
 - financial threshold and deadline checks evaluated by code, not by the model
-- calendar review hold and approval task created
+- calendar review hold and approval task staged as explicit records
 - vendor reply drafted but explicitly non-sendable
-- full run and guardrails persisted to Firestore on Cloud Run
+- full run and guardrails persisted to Firestore when Cloud Run is configured with a project; local runs use an in-memory store
 
 The demo uses synthetic ZenCloud data. With no API key, it uses a deterministic local extractor so the workflow remains reproducible. With GEMINI_API_KEY, the Google GenAI SDK uses the configured Gemini model and structured JSON output.
 
@@ -66,7 +66,7 @@ Cloud Run injects PORT; the service listens on 0.0.0.0 and exposes /api/health f
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md) and the [static architecture diagram](docs/architecture.svg). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
+See [docs/architecture.md](docs/architecture.md), the [static architecture diagram](docs/architecture.svg), the [science and evidence appendix](SCIENCE_APPENDIX.md), and the [self-directed release backlog](BACKLOG.md). The key boundary is deliberate: Gemini extracts; deterministic code decides; action adapters stage reversible work; a human approves financial commitment.
 
 ## Demo script (under 4 minutes)
 

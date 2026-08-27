@@ -14,7 +14,7 @@ Renewal Relay turns a renewal notice into a policy-checked, human-approved actio
 
 ## Description
 
-Renewal deadlines arrive as inbox noise, but the cost of missing one is real. Renewal Relay reads one synthetic renewal notice, extracts the facts with Gemini 3.5 Flash, checks an explicit company policy in deterministic code, and stages the work needed to move forward: a calendar hold, an approval task, a vendor reply draft, and a durable audit record.
+Renewal deadlines arrive as inbox noise, but the cost of missing one is real. Renewal Relay reads one synthetic renewal notice, extracts the facts with Gemini 3.5 Flash, checks an explicit company policy in deterministic code, and stages the work needed to move forward: a calendar hold record, an approval task record, a vendor reply draft, and a durable audit record.
 
 This is autonomous action with a boundary. The agent runs as a background job, makes the routing decision, and prepares the next steps without requiring the operator to translate a summary into more work. It does not send an external message, cancel a contract, or approve a financial commitment without a human. If a renewal is above the threshold or a fact is missing, it escalates with the reason visible.
 
@@ -28,6 +28,8 @@ Gemini 3.5 Flash through the Google GenAI SDK, Node.js, Google Cloud Run, and Fi
 - A complete agent demo needs visible side effects, not only a generated answer. The action packet makes each side effect and its status explicit.
 - A safe default can still be useful: the system routes high-value renewals to a human instead of silently guessing or auto-approving.
 - Async progress and an audit trail make the agent’s behavior legible to both an operator and a reviewer.
+
+The [science and evidence appendix](../SCIENCE_APPENDIX.md) records the policy equations, evidence map, experiments, and limitations. The action cards in this demo are internal staged records; they are not claims that a real calendar, task system, or vendor mailbox was mutated.
 
 ## Demo video outline
 
@@ -44,10 +46,12 @@ Keep the public video under four minutes:
 
 - [x] Repository with reproducible README
 - [x] Architecture diagram
-- [x] Gemini 3.5+ integration through a Google agent framework
-- [x] Cloud Run and Firestore deployment path
+- [x] Gemini 3.5+ code path through the Google GenAI SDK (live API call unverified)
+- [x] Cloud Run and Firestore deployment path (live deployment unverified)
 - [x] Synthetic, repeatable local demo
 - [x] Targeted automated tests
+- [x] Science appendix with source map, policy equations, rubric mapping, and limitations
+- [ ] Live Google Cloud runtime proof receipt
 - [ ] Public hosted URL
 - [ ] Public demo video on YouTube or Vimeo
 - [ ] Final Devpost submission confirmation by the human

@@ -22,9 +22,11 @@ test("policy escalates a renewal above the financial threshold", () => {
 
 test("agent completes the full action packet and records guardrails", async () => {
   const events = [];
-  const agent = createRenewalAgent({ adapter: createDemoAdapter(), stepDelayMs: 0 });
+  const agent = createRenewalAgent({ adapter: createDemoAdapter(), stepDelayMs: 0, clock: () => new Date("2026-08-27T12:00:00Z") });
   const run = await agent.run(SAMPLE_NOTICE, { runId: "run_test", onProgress: (event) => events.push(event) });
   assert.equal(run.status, "complete");
+  assert.equal(run.decision.status, "REVIEW_REQUIRED");
+  assert.equal(run.decision.passedChecks, 3);
   assert.equal(run.actions.length, 4);
   assert.equal(run.actions.find((item) => item.id === "vendor_draft").metadata.sendable, false);
   assert.match(run.guardrails.join(" "), /No auto-cancel/);
