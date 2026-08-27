@@ -47,11 +47,11 @@ other event field differs across a cached resource, the live Devpost page wins.
 - [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) and its [Playbook](https://www.nist.gov/itl/ai-risk-management-framework/nist-ai-rmf-playbook) — governance, mapping, measurement, and management framing for documenting risks and human-AI responsibilities. This is guidance, not a certification of this prototype.
 
 The runtime dependencies are pinned directly to `@google/genai` 2.19.0 and
-`@google-cloud/firestore` 9.0.0. In the rebuilt image, `npm audit --omit=dev`
-returned 0 vulnerabilities. There is intentionally no generated lockfile in this
-small worktree yet, so transitive resolution can still change between installs; the
-passing CI/image checks are evidence for this commit, not a promise of immutable
-dependency supply-chain state.
+`@google-cloud/firestore` 9.0.0. `package-lock.json` uses lockfile version 3;
+Docker and CI install with `npm ci`, and the rebuilt image's `npm audit --omit=dev`
+returned 0 vulnerabilities. This makes the recorded dependency graph reproducible
+for this commit, while the base image digest and upstream package availability remain
+normal supply-chain assumptions.
 
 ## 2. Claim-to-evidence map
 
@@ -64,7 +64,7 @@ dependency supply-chain state.
 | The agent fails closed on extraction failure. | `createRenewalAgent` catches adapter errors, emits a failed timeline event, and returns no action packet; the test asserts no `actions`. | Persistence callback failures are operational errors and should be monitored in a production deployment. |
 | The workflow produces meaningful internal side effects. | The run store records a source notice, timeline, decision, four action records, and guardrails; the UI renders them separately. | “Calendar hold” and “approval task” are staged records in this prototype, not mutations to a real external calendar/task service. The vendor draft is always `sendable: false`. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
-| The project is reproducible. | `README.md`, `package.json`, Dockerfile, seven automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
+| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, ten automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
 ## 3. Decision model
 
@@ -138,7 +138,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains eight cases:
+The test set contains ten cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
@@ -199,7 +199,7 @@ The live judging criteria returned by the plugin are Innovation & Operational Ut
 - Country of residence: human-only field; not guessed here.
 - Project start date: `08-27-26`, supported by the initial commit timestamp of
   `6208e5384f736801bd4d376fc8c3fd255beb642e` (`2026-08-27T15:26:43+02:00`).
-- Repository: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay), main at `d79ffff12c4bceb274d05bd222f9568bafbc2804`.
+- Repository: [github.com/DominiqueAndrew/renewal-relay](https://github.com/DominiqueAndrew/renewal-relay); the exact verification SHA is recorded in each CI/release receipt.
 - Reproducible README: `Yes`.
 - Google SDK: `Google GenAI SDK (google-genai)`.
 - Google Cloud services: `Cloud Run` and `Firestore` as the configured deployment path.
@@ -216,7 +216,7 @@ The live judging criteria returned by the plugin are Innovation & Operational Ut
 From the repository root:
 
 ```bash
-npm install
+npm ci
 npm test
 npm run check
 docker build -t renewal-relay:local .

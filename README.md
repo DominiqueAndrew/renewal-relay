@@ -32,7 +32,7 @@ The All Things Agentic Hackathon rules are authoritative. They require Gemini 3.
 Requirements: Node.js 20+.
 
 ~~~bash
-npm install
+npm ci
 npm test
 npm run eval
 npm run check
@@ -55,7 +55,7 @@ Never commit .env or keys. If Gemini is unavailable at runtime, the service fail
 
 ## Deploy to Google Cloud Run
 
-The included Dockerfile is self-contained. With the Google Cloud CLI authenticated and a project selected:
+The included Dockerfile is self-contained and uses the committed lockfile for reproducible dependency installation. With the Google Cloud CLI authenticated and a project selected:
 
 ~~~bash
 gcloud config set project YOUR_PROJECT_ID
