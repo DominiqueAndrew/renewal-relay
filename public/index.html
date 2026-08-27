@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f4ef" />
+    <title>Renewal Relay — autonomous operations</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="Renewal Relay home"><span class="brand-mark">↗</span><span>Renewal Relay</span></a>
+        <div class="topbar-meta"><span class="status-dot"></span><span>Agent online</span><span class="meta-divider"></span><span id="runtimeLabel">Cloud Run ready</span></div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div>
+            <p class="eyebrow">OPERATIONS / RENEWALS</p>
+            <h1>Deadlines should not<br /><em>hide in your inbox.</em></h1>
+            <p class="hero-copy">Renewal Relay turns one messy notice into a reviewed, routed, and evidenced next step — while you keep the final say.</p>
+          </div>
+          <div class="hero-note"><span class="note-index">01</span><span>One notice in.<br />A complete handoff out.</span></div>
+        </section>
+
+        <section class="workspace" aria-label="Renewal agent workspace">
+          <div class="source-panel panel">
+            <div class="panel-heading"><div><p class="kicker">SOURCE NOTICE</p><h2>Inbox / renewals</h2></div><span class="live-label"><span class="status-dot"></span>SYNTHETIC</span></div>
+            <button class="primary-button" id="runButton" type="button"><span>Run Renewal Relay</span><span class="button-arrow">↗</span></button>
+            <p class="button-hint">Runs in the background · no external message is sent</p>
+            <div class="notice-card">
+              <div class="notice-top"><span id="noticeVendor">ZenCloud</span><span id="noticeDate">AUG 27, 2026 · 08:30</span></div>
+              <h3 id="noticeSubject">Action required: annual renewal on September 12</h3>
+              <p class="notice-from" id="noticeFrom">renewals@zencloud.example</p>
+              <p class="notice-body" id="noticeBody">Your ZenCloud annual Pro workspace renews on September 12, 2026 for $1,440 USD (12 seats). Cancel before September 5, 2026 to avoid the charge. Account owner Samira Chen (samira@example.com).</p>
+              <div class="notice-foot"><span class="attachment">▧  original notice</span><span class="notice-lock">read-only</span></div>
+            </div>
+          </div>
+
+          <div class="run-panel panel">
+            <div class="panel-heading"><div><p class="kicker">AGENT RUN</p><h2 id="runHeading">Waiting for a notice</h2></div><span class="run-id" id="runId">NO RUN</span></div>
+            <div class="progress-wrap"><div class="progress-line"><span id="progressBar"></span></div><span id="progressText">Ready when you are</span></div>
+            <div class="timeline" id="timeline" aria-live="polite"><div class="empty-state"><span class="empty-icon">◌</span><p>The agent will show its work here.<br />Every step is reversible and recorded.</p></div></div>
+            <div class="decision-card hidden" id="decisionCard">
+              <div class="decision-top"><span class="kicker">POLICY RESULT</span><span class="decision-pill" id="decisionStatus">REVIEW REQUIRED</span></div>
+              <div class="decision-main"><div><h3 id="decisionTitle">Human approval required</h3><p id="decisionRationale"></p></div><div class="check-count"><strong id="checkCount">0/0</strong><span>checks passed</span></div></div>
+              <div class="checks" id="checks"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="actions-section hidden" id="actionsSection">
+          <div class="section-heading"><div><p class="kicker">OUTPUT / 04 ACTIONS</p><h2>The work is staged.</h2></div><p>Nothing disappears into a black box. Each action is explicit, reversible, and ready for a human to review.</p></div>
+          <div class="action-grid" id="actionGrid"></div>
+        </section>
+
+        <section class="guardrail-strip">
+          <div><span class="guardrail-symbol">◎</span><span><strong>Designed for supervised autonomy.</strong> Renewal Relay can prepare and route work; it cannot send or cancel on your behalf.</span></div>
+          <span class="mono">GEMINI 3.5 · GENAI SDK · CLOUD RUN · FIRESTORE</span>
+        </section>
+      </main>
+      <footer><span>RENEWAL RELAY / 2026</span><span>OPERATIONS, WITH A HUMAN IN THE LOOP</span></footer>
+    </div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

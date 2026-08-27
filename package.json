@@ -1,0 +1,19 @@
+{
+  "name": "renewal-relay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An autonomous renewal operations agent built for the All Things Agentic Hackathon.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js",
+    "check": "node --check src/server.js && node --check src/agent/renewal-agent.js && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.11.0",
+    "@google/genai": "^1.18.0"
+  }
+}
