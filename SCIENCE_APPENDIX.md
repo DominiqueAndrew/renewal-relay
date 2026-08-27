@@ -183,11 +183,18 @@ policy labels, not estimates of model accuracy or business outcomes.
 
 ### Container and UI checks
 
-- `docker build -t renewal-relay:local .` passed.
+- `docker build --no-cache -t renewal-relay:release-85ce2ec .` passed at public
+  commit `85ce2ec`; the image identity was
+  `sha256:d7911f58d5f9026696d2d9f31211329620f201abfce6f0ccc5220a08a9f0e9dc`.
+- `docker run --rm --entrypoint npm renewal-relay:release-85ce2ec audit --omit=dev`
+  reported 0 vulnerabilities.
 - The image imported both `@google/genai` and `@google-cloud/firestore`.
-- A container smoke run returned HTTP 200 from `/api/health`; a POST returned `202`
-  and a run transitioned from `queued` through `running` to `complete` with four
-  actions and `REVIEW_REQUIRED`.
+- A fresh container smoke run returned HTTP 200 from `/api/health`; `/api/demo`
+  identified the synthetic fallback; a POST returned `202` and a run transitioned
+  from `queued` through `running` to `complete` with four actions and
+  `REVIEW_REQUIRED`. All actions were `record_only` and retry-safe, the vendor
+  draft was non-sendable, and the source fingerprint matched the expected SHA-256
+  format. `verify:runtime` returned `verified` against the local container only.
 - The UI was inspected at 390×844, 768×1024, 1366×768, 1440×900, 1920×1080, and
   2560×1440. The CTA remained visible and no horizontal overflow was observed; the
   completed action state rendered the four cards and decision summary.
