@@ -45,6 +45,7 @@ The complete action list is [docs/human-gates.md](human-gates.md). It is the rem
 ## Non-blocking notes and residual risk
 
 - The current evidence is strong for a local, reproducible vertical slice, but it is not production-provider evidence until the authorized Cloud Run, Firestore, and Gemini checks are performed.
+- The [threat model](../Hackatons-threat-model.md) records the current HTTP, model, browser, secret, and action-staging controls. The public unauthenticated path is acceptable only for the synthetic demo; real notices require identity, quotas, tenant isolation, and authorized Firestore access.
 - GitHub Actions reports a non-blocking Node.js 20 deprecation warning from an action dependency. It does not fail the release boundary, but should be refreshed before a long-lived production workflow.
 - No external calendar, task system, mailbox, or contract was mutated. The action cards are reversible internal records and financial commitment remains human-approved by design.
 
