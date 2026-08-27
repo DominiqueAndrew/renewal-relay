@@ -1,47 +1,26 @@
 # Responsive UI review
 
-Review targets: `7b1bb3ae3e78fa61aed26fa805ceb2083a77a8e` for initial/completed geometry; `2b5488196830b301bb6aa556d3c651bae52e8f08` for the failure/retry state
-Review date: 2026-08-27  
-Method: responsive-ui-review checklist, Chrome headless at 100% zoom, local synthetic demo data.
+Review target: current worktree provenance-row change (completed-run evidence plus failed-state clearing).
+Review date: 2026-08-27
+Method: the responsive-ui-review checklist, Playwright CLI with Chrome at 100% zoom, synthetic local demo data. Screenshots were captured at the required viewport sizes after scrolling the run panel into view; each PNG retains the requested viewport dimensions.
 
 ## Evidence matrix
 
-| Viewport | Initial CTA geometry | Initial width | Completed state | Verdict |
-| --- | ---: | ---: | --- | --- |
-| 390 × 844 | y=640–701; visible | 390 | 4 action cards; no overflow | Pass |
-| 768 × 1024 | y=559–620; visible | 768 | 4 action cards; no overflow | Pass |
-| 1366 × 768 | y=600–661; visible | 1366 | 4 action cards; no overflow | Pass |
-| 1440 × 900 | y=608–669; visible | 1440 | 4 action cards; no overflow | Pass |
-| 1920 × 1080 | y=608–669; visible | 1920 | 4 action cards; no overflow | Pass |
-| 2560 × 1440 | y=608–669; visible | 2560 | 4 action cards; no overflow | Pass |
+| Viewport | Completed-state artifact | Failed-state artifact | Observed result | Verdict |
+| --- | --- | --- | --- | --- |
+| 390 × 844 | [complete-mobile-run-390x844.png](../output/playwright/complete-mobile-run-390x844.png) | [failed-mobile-run-390x844.png](../output/playwright/failed-mobile-run-390x844.png) | Provenance stacks cleanly; failed state shows retry only | Pass |
+| 768 × 1024 | [complete-tablet-run-768x1024.png](../output/playwright/complete-tablet-run-768x1024.png) | [failed-tablet-run-768x1024.png](../output/playwright/failed-tablet-run-768x1024.png) | Two-column evidence stays aligned; failed state has no evidence | Pass |
+| 1366 × 768 | [complete-laptop-run-1366x768.png](../output/playwright/complete-laptop-run-1366x768.png) | [failed-laptop-run-1366x768.png](../output/playwright/failed-laptop-run-1366x768.png) | Provider and redacted digest remain compact beside policy result | Pass |
+| 1440 × 900 | [complete-desktop-run-1440x900.png](../output/playwright/complete-desktop-run-1440x900.png) | [failed-desktop-run-1440x900.png](../output/playwright/failed-desktop-run-1440x900.png) | Run panel and source panel retain balanced desktop geometry | Pass |
+| 1920 × 1080 | [complete-large-run-1920x1080.png](../output/playwright/complete-large-run-1920x1080.png) | [failed-large-run-1920x1080.png](../output/playwright/failed-large-run-1920x1080.png) | No clipping or horizontal overflow; action section remains below | Pass |
+| 2560 × 1440 | [complete-wide-run-2560x1440.png](../output/playwright/complete-wide-run-2560x1440.png) | [failed-wide-run-2560x1440.png](../output/playwright/failed-wide-run-2560x1440.png) | Wide layout stays centered; safe failure state remains sparse | Pass |
 
-The completed run showed `Renewal packet ready`, `REVIEW REQUIRED`, the four-step timeline, and `Actions staged`. The action cards remain in the scrollable document on narrow and wide layouts; they are confirmed by DOM count and are not clipped. The initial primary CTA is above the fold at every required viewport.
+## State assertions
 
-## Captured artifacts
+The completed run shows PROVENANCE / RECORDED, the provider label, and a shortened SHA-256 digest (12 hex chars ... 8 hex chars) before the policy result. The failed run shows Run stopped safely, Run stopped safely · no actions staged, and an enabled Retry safely button; the provenance, decision, and action regions are all hidden and cleared.
 
-The inspected local screenshot artifacts are retained outside Git at `/tmp`:
-
-- `/tmp/renewal-relay-mobile-initial-current.png`
-- `/tmp/renewal-relay-tablet-initial-current.png`
-- `/tmp/renewal-relay-laptop-initial-current.png`
-- `/tmp/renewal-relay-desktop-initial-current.png`
-- `/tmp/renewal-relay-large-initial-current.png`
-- `/tmp/renewal-relay-wide-initial-current.png`
-- `/tmp/renewal-relay-mobile-completed-current.png`
-- `/tmp/renewal-relay-tablet-completed-current.png`
-- `/tmp/renewal-relay-laptop-completed-current.png`
-- `/tmp/renewal-relay-desktop-completed-current.png`
-- `/tmp/renewal-relay-large-completed-current.png`
-- `/tmp/renewal-relay-wide-completed-current.png`
+The completed-state screenshots also show four staged action records. The initial shell and CTA geometry is unchanged by this completed-state-only addition; the initial state remains covered by the prior baseline review at the six required viewport sizes.
 
 ## Scope and residual risk
 
-No responsive blocker was found: document width matched the viewport at all six sizes, the CTA was visible in the initial state, and the completed state rendered four staged action records. This is local Chrome evidence only; cross-browser behavior and a deployed Google Cloud runtime remain separate release gates.
-
-## Failure and retry spot check
-
-At 390 × 844, a browser-controlled provider failure produced `Run stopped safely`,
-`Run stopped safely · no actions staged`, and an enabled `Retry safely` button. The
-decision card and action section remained hidden (`actionCards=0`), and document/body
-width stayed 390px. The scrolled visual artifact is retained outside Git at
-`/tmp/renewal-relay-mobile-failure-ui-failed-scrolled.png`.
+No responsive blocker was found in the current visual pass. This is local Chrome evidence only; cross-browser behavior and a deployed Google Cloud runtime remain separate release gates.

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getRunPresentation } from "../public/run-state.js";
+import { getRunPresentation, redactFingerprint } from "../public/run-state.js";
 import { verifyRuntime } from "../scripts/verify-runtime.mjs";
 import { findSecretPatterns, scanTrackedFiles } from "../scripts/check-secrets.mjs";
 
@@ -11,15 +11,24 @@ test("failed runs are visibly safe and retryable", () => {
   assert.equal(state.buttonLabel, "Retry safely");
   assert.equal(state.showDecision, false);
   assert.equal(state.showActions, false);
+  assert.equal(state.showEvidence, false);
 });
 
 test("completed runs alone reveal the decision and staged actions", () => {
-  const state = getRunPresentation({ status: "complete", timeline: [{}, {}, {}, {}], decision: {}, actions: [{ id: "one" }] });
+  const state = getRunPresentation({ status: "complete", timeline: [{}, {}, {}, {}], decision: {}, actions: [{ id: "one" }], provider: "Gemini gemini-3.5-flash via Google GenAI SDK", sourceFingerprint: "a".repeat(64) });
   assert.equal(state.heading, "Renewal packet ready");
   assert.equal(state.progress, 100);
   assert.equal(state.buttonLabel, "Run again");
   assert.equal(state.showDecision, true);
   assert.equal(state.showActions, true);
+  assert.equal(state.showEvidence, true);
+});
+
+test("provenance rendering requires a valid fingerprint and redacts it", () => {
+  const fingerprint = "a".repeat(64);
+  assert.equal(getRunPresentation({ status: "complete", provider: "Gemini", sourceFingerprint: "not-a-fingerprint" }).showEvidence, false);
+  assert.equal(redactFingerprint(fingerprint), "aaaaaaaaaaaa…aaaaaaaa");
+  assert.equal(redactFingerprint("not-a-fingerprint"), "Unavailable");
 });
 
 test("queued and running states keep the operator from starting a duplicate run", () => {
@@ -28,6 +37,7 @@ test("queued and running states keep the operator from starting a duplicate run"
     assert.equal(state.buttonLabel, "Agent is running…");
     assert.equal(state.showDecision, false);
     assert.equal(state.showActions, false);
+    assert.equal(state.showEvidence, false);
   }
 });
 

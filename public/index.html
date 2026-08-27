@@ -45,6 +45,13 @@
             <div class="panel-heading"><div><p class="kicker">AGENT RUN</p><h2 id="runHeading">Waiting for a notice</h2></div><span class="run-id" id="runId">NO RUN</span></div>
             <div class="progress-wrap"><div class="progress-line"><span id="progressBar"></span></div><span id="progressText">Ready when you are</span></div>
             <div class="timeline" id="timeline" aria-live="polite"><div class="empty-state"><span class="empty-icon">◌</span><p>The agent will show its work here.<br />Every step is reversible and recorded.</p></div></div>
+            <div class="run-evidence hidden" id="runEvidence">
+              <div class="run-evidence-heading"><span class="kicker">PROVENANCE</span><span class="run-evidence-status">RECORDED</span></div>
+              <div class="evidence-grid">
+                <div><span class="mono">MODEL / PROVIDER</span><strong id="runProvider"></strong></div>
+                <div><span class="mono">NOTICE SHA-256</span><code id="runFingerprint"></code></div>
+              </div>
+            </div>
             <div class="decision-card hidden" id="decisionCard">
               <div class="decision-top"><span class="kicker">POLICY RESULT</span><span class="decision-pill" id="decisionStatus">REVIEW REQUIRED</span></div>
               <div class="decision-main"><div><h3 id="decisionTitle">Human approval required</h3><p id="decisionRationale"></p></div><div class="check-count"><strong id="checkCount">0/0</strong><span>checks passed</span></div></div>

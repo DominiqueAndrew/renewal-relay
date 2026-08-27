@@ -1,4 +1,4 @@
-import { getRunPresentation } from "./run-state.js";
+import { getRunPresentation, redactFingerprint } from "./run-state.js";
 
 const $ = (id) => document.getElementById(id);
 const icons = { calendar: "□", task: "✓", draft: "✎", audit: "⌁" };
@@ -48,8 +48,21 @@ function renderActions(run) {
   $("actionGrid").innerHTML = run.actions.map((item) => "<article class='action-card'><span class='action-symbol'>" + (icons[item.type] || "·") + "</span><h3>" + escapeHtml(item.title) + "</h3><p>" + escapeHtml(item.detail) + "</p><span class='action-status'>" + escapeHtml(item.status) + "</span></article>").join("");
 }
 
+function renderEvidence(run) {
+  if (!getRunPresentation(run).showEvidence) {
+    $("runEvidence").classList.add("hidden");
+    $("runProvider").textContent = "";
+    $("runFingerprint").textContent = "";
+    return;
+  }
+  $("runEvidence").classList.remove("hidden");
+  $("runProvider").textContent = run.provider;
+  $("runFingerprint").textContent = redactFingerprint(run.sourceFingerprint);
+}
+
 function renderRun(run) {
   renderTimeline(run);
+  renderEvidence(run);
   renderDecision(run);
   renderActions(run);
   $("runButton").querySelector("span:first-child").textContent = getRunPresentation(run).buttonLabel;
