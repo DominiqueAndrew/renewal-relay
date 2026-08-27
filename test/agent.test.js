@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createDemoAdapter, validateExtraction } from "../src/ai/gemini-adapter.js";
+import { createDemoAdapter, createGeminiAdapter, validateExtraction } from "../src/ai/gemini-adapter.js";
 import { createRenewalAgent, fingerprintNotice, SAMPLE_NOTICE } from "../src/agent/renewal-agent.js";
 import { DEFAULT_POLICY, evaluateRenewal } from "../src/domain/policy.js";
 
@@ -11,6 +11,11 @@ test("demo adapter extracts the synthetic renewal notice without inventing facts
   assert.equal(extraction.renewalDate, "2026-09-12");
   assert.equal(extraction.cancelByDate, "2026-09-05");
   assert.equal(extraction.missingFacts.length, 0);
+});
+
+test("Gemini provider metadata reports the configured model without making a request", () => {
+  const adapter = createGeminiAdapter({ apiKey: "synthetic-test-key", model: "gemini-3.5-flash" });
+  assert.match(adapter.provider, /gemini-3\.5-flash/);
 });
 
 test("policy escalates a renewal above the financial threshold", () => {

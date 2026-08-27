@@ -114,7 +114,7 @@ export function createGeminiAdapter({ apiKey = process.env.GEMINI_API_KEY, model
   let ai;
 
   return {
-    provider: "Gemini 3.5 Flash via Google GenAI SDK",
+    provider: "Gemini " + model + " via Google GenAI SDK",
     async extract(notice) {
       if (!ai) {
         const { GoogleGenAI } = await import("@google/genai");

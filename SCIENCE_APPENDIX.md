@@ -70,7 +70,7 @@ normal supply-chain assumptions.
 | Cloud runtime proof can be repeated without exposing credentials. | `scripts/verify-runtime.mjs` checks only a supplied URL's `/api/health` contract and returns redacted `verified`, `blocked`, or `failed` JSON; unit tests cover missing URL, success, and contract failure. | No URL was available in this worktree, so live Cloud Run, revision, IAM, and Firestore proof remain open. |
 | Tracked secrets are rejected before publication. | `scripts/check-secrets.mjs` scans tracked files for high-confidence private-key and token formats, reports only file/line/pattern identifiers, and runs in GitHub Actions; tests cover detection without value echoing. | This is a lightweight detector, not a complete secret-management program; provider-side scanning and credential rotation remain deployment responsibilities. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
-| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, eighteen automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
+| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, nineteen automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
 ## 3. Decision model
 
@@ -148,28 +148,29 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains eighteen cases:
+The test set contains nineteen cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
-2. amount threshold escalates a high-value renewal;
-3. a complete run emits four action records, stable replay keys, and guardrails;
-4. an unavailable extraction provider fails closed with no actions;
-5. health endpoint responds with the Cloud Run-ready service identity;
-6. HTTP run creation is queued asynchronously and reaches completion;
-7. incomplete HTTP notices are rejected before queueing;
-8. the fixed-clock policy matrix conforms at the amount boundary and across missing/urgent facts;
-9. the extraction validator rejects unknown action fields, impossible dates, and out-of-range confidence;
-10. an adapter returning an unsafe extraction shape fails closed before any action is staged;
-11. failed UI runs expose a safe retry state and hide outputs;
-12. completed UI runs alone expose the decision and staged actions;
-13. queued/running UI states expose a busy label and suppress duplicate-run affordances;
-14. source fingerprints are stable for the same content and change when content changes;
-15. the runtime proof checker blocks a missing URL;
-16. the runtime proof checker verifies the health contract without copying query credentials;
-17. the runtime proof checker fails closed on a bad response;
-18. the tracked-file secret scan detects high-confidence formats without echoing values.
+2. configured Gemini provider metadata reports the configured model without a request;
+3. amount threshold escalates a high-value renewal;
+4. a complete run emits four action records, stable replay keys, and guardrails;
+5. an unavailable extraction provider fails closed with no actions;
+6. health endpoint responds with the Cloud Run-ready service identity;
+7. HTTP run creation is queued asynchronously and reaches completion;
+8. incomplete HTTP notices are rejected before queueing;
+9. the fixed-clock policy matrix conforms at the amount boundary and across missing/urgent facts;
+10. the extraction validator rejects unknown action fields, impossible dates, and out-of-range confidence;
+11. an adapter returning an unsafe extraction shape fails closed before any action is staged;
+12. failed UI runs expose a safe retry state and hide outputs;
+13. completed UI runs alone expose the decision and staged actions;
+14. queued/running UI states expose a busy label and suppress duplicate-run affordances;
+15. source fingerprints are stable for the same content and change when content changes;
+16. the runtime proof checker blocks a missing URL;
+17. the runtime proof checker verifies the health contract without copying query credentials;
+18. the runtime proof checker fails closed on a bad response;
+19. the tracked-file secret scan detects high-confidence formats without echoing values.
 
-Observed result: **18 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **19 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`
