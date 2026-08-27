@@ -51,8 +51,10 @@ complete on the entrant’s behalf.
   reproducible README answer `Yes`, `Google GenAI SDK`, every Google Cloud service
   actually verified in the deployment (intended final selection: `Cloud Run` +
   `Firestore` after both are evidenced), architecture diagram
-  `docs/architecture.svg`, and Gemini model `gemini-3.5-flash` where the form asks
-  for them. The current SDK and Cloud service fields are multi-select.
+  `docs/architecture.png` (upload-ready; `docs/architecture.svg` is the source),
+  and Gemini model `gemini-3.5-flash` where the form asks for them. The current
+  SDK and Cloud service fields are multi-select; the architecture field accepts
+  PDF/PPT/PPTX/PNG/JPG/JPEG.
 - [ ] Add the public demo-video URL. A hosted project URL is optional in the live
   form; a zip upload is not required by the current form snapshot.
 - [ ] Review the generated project description, links, permissions, and claims;

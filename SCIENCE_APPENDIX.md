@@ -236,7 +236,9 @@ The live judging criteria returned by the plugin are Innovation & Operational Ut
   in the deployment; the live field is multi-select.
 - Gemini model: `Gemini 3.5 Flash` (`gemini-3.5-flash`) in the live adapter; deterministic
   extractor is the explicit no-key local fallback.
-- Architecture diagram: `docs/architecture.svg`.
+- Architecture diagram upload: `docs/architecture.png`; editable source:
+  `docs/architecture.svg`. The current live submission field accepts
+  PDF/PPT/PPTX/PNG/JPG/JPEG, so the PNG is the submission artifact.
 - Hosted URL: not available yet.
 - Demo video: required by the live form; not recorded yet.
 - Organization/startup and bonus fields: leave blank unless the entrant supplies the

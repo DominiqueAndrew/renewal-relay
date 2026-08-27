@@ -4,7 +4,13 @@ This is the smallest path from the verified local slice to a truthful live demo 
 
 ## Live Devpost checkpoint
 
-The Devpost Hackathons plugin refreshed the official event surfaces at `2026-08-27T15:30:13Z`: the event is `submissions_open`, the deadline is `2026-09-01T00:00:00Z` (August 31 at 5:00 PM Pacific), and the current form still reports `can_register: true` and `already_registered: false`. The latest announcement says Google Cloud credit delivery is delayed; credits are not guaranteed, so use the credential-free fallback below if access is not approved.
+The Devpost Hackathons plugin refreshed the official event surfaces at `2026-08-27T15:43:22Z`: the event is `submissions_open`, the deadline is `2026-09-01T00:00:00Z` (August 31 at 5:00 PM Pacific), and the current form still reports `can_register: true` and `already_registered: false`. The latest credit announcement says delivery is delayed and asks entrants not to submit duplicate requests while waiting; credits are not guaranteed, so use the credential-free fallback below if access is not approved.
+
+Current public release to deploy or show in the recording: commit
+`5320ddacab73bd15fc1e5e1b0b386957a3ce9c36`, with green CI run
+[33089215993](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33089215993).
+The matching local image receipt is recorded in [release-receipt.md](release-receipt.md);
+its digest is `sha256:d7911f58d5f9026696d2d9f31211329620f201abfce6f0ccc5220a08a9f0e9dc`.
 
 If requesting the advertised credits, open the live [Resources tab](https://allthingsagentichackathon.devpost.com/resources) and use the link shown there. The current rules text and Resources block expose different Google Forms URLs, so do not hard-code either one or claim that credits were requested/approved without the entrant's own receipt.
 
@@ -140,7 +146,7 @@ On the event page, select **Register**, then complete only with the entrant's ow
 - Read the [official rules](https://allthingsagentichackathon.devpost.com/rules), [Devpost terms](https://info.devpost.com/terms), and eligibility text. Only the entrant may check the two required **I agree** boxes: one authorizes Google Cloud communications and the other acknowledges Google's Privacy Policy.
 - Leave optional employment information blank unless the entrant chooses to provide it.
 
-After registration, open the project submission form and use [devpost-submission-pack.md](devpost-submission-pack.md) for the project text and field map. Enter the actual country, public video URL, live hosted URL if available, verified Google service/model evidence, and architecture file. Select `Taskmaster`; the Google SDK and Cloud service fields are currently multi-select. Review every claim, then submit only after the entrant's explicit final confirmation. Record the returned status/ID/URL in the receipt.
+After registration, open the project submission form and use [devpost-submission-pack.md](devpost-submission-pack.md) for the project text and field map. Enter the actual country, public video URL, live hosted URL if available, verified Google service/model evidence, and upload `docs/architecture.png` (the live architecture field accepts PNG/JPG/JPEG/PDF/PPT/PPTX; `docs/architecture.svg` is the editable source, not the upload target). Select `Taskmaster`; the Google SDK and Cloud service fields are currently multi-select. Review every claim, then submit only after the entrant's explicit final confirmation. Record the returned status/ID/URL in the receipt.
 
 ## Evidence decision rule
 

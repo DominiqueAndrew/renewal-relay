@@ -1,6 +1,6 @@
 # Devpost submission answer pack
 
-Snapshot: 2026-08-27, Europe/Paris. Live plugin refresh: 2026-08-27T15:30:13Z. This is a copy-paste draft for the live All Things Agentic Hackathon form, refreshed through the Devpost Hackathons plugin. Devpost remains authoritative if the form changes. Do not treat a placeholder as an answer and do not submit without the entrant's own confirmations.
+Snapshot: 2026-08-27, Europe/Paris. Live plugin refresh: 2026-08-27T15:43:22Z. This is a copy-paste draft for the live All Things Agentic Hackathon form, refreshed through the Devpost Hackathons plugin. Devpost remains authoritative if the form changes. Do not treat a placeholder as an answer and do not submit without the entrant's own confirmations.
 
 ## Project content
 
@@ -12,7 +12,7 @@ Snapshot: 2026-08-27, Europe/Paris. Live plugin refresh: 2026-08-27T15:30:13Z. T
 | Description | Use the [submission description](submission.md#description). It describes the synthetic notice, Gemini extraction boundary, deterministic policy, four staged records, asynchronous run, and human approval boundary. |
 | Built with | `Gemini 3.5 Flash`, `Google GenAI SDK (google-genai)`, `Node.js`, `Cloud Run`, `Firestore`, vanilla HTML/CSS/JavaScript |
 | Code repository | `https://github.com/DominiqueAndrew/renewal-relay` |
-| Architecture diagram | Upload `docs/architecture.svg` from the exact public release commit. |
+| Architecture diagram | Upload `docs/architecture.png` from the exact public release commit. The editable source is `docs/architecture.svg`; the live field accepts PNG/JPG/JPEG/PDF/PPT/PPTX. |
 | Demo video | Human must publish a public YouTube or Vimeo URL after recording the live Cloud Run proof. |
 
 Live deliverable contract: a public demo video is required; a hosted website URL and zip file are not required by the current form.
@@ -34,7 +34,7 @@ The IDs are the live form identifiers observed on 2026-08-27; labels and options
 | 28090 | Testing instructions optional | `Clone the repo, run npm ci, npm test, npm run check, npm run eval, and npm run check:secrets. See README.md.` |
 | 28091 | Which Google SDK did you use? | The live field is multi-select. Select `Google GenAI SDK (google-genai)` only. |
 | 28142 | Which Google Cloud Service (s) did you use? | The live field is multi-select with `Cloud Run`, `Cloud SQL`, `Firestore`, `Google Kubernetes (GKE)`, and `Pub/Sub`. Select every service actually used and evidenced; the intended final selection is `Cloud Run` + `Firestore` only after live deployment and Firestore read-back are verified. |
-| 28092 | Architecture diagram | `docs/architecture.svg` upload |
+| 28092 | Architecture diagram | Upload `docs/architecture.png`; the live field rejects SVG and accepts PDF/PPT/PPTX/PNG/JPG/JPEG. |
 | 28143 | Which Google AI Models did you use? Gemini 3.5 or newer is REQUIRED. | `Gemini 3.5 Flash (gemini-3.5-flash)` only after a live Gemini-backed run is verified. No additional model is claimed. |
 
 Leave the Startup Prize organization/email fields and optional bonus blog/social fields blank unless the entrant supplies truthful values and explicitly opts in.
