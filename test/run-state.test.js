@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { getRunPresentation } from "../public/run-state.js";
 import { verifyRuntime } from "../scripts/verify-runtime.mjs";
+import { findSecretPatterns, scanTrackedFiles } from "../scripts/check-secrets.mjs";
 
 test("failed runs are visibly safe and retryable", () => {
   const state = getRunPresentation({ status: "failed", timeline: [{ state: "failed" }] });
@@ -55,4 +56,12 @@ test("runtime proof fails closed on a non-contract response", async () => {
   assert.equal(result.ok, false);
   assert.equal(result.status, "failed");
   assert.match(result.reason, /health response/);
+});
+
+test("secret scan detects high-confidence token formats without echoing values", async () => {
+  assert.deepEqual(findSecretPatterns("placeholder only"), []);
+  assert.deepEqual(findSecretPatterns(["AIza", "Sy123456789012345678901"].join("")), ["google-api-key"]);
+  const findings = await scanTrackedFiles(["README.md", "fixture.env"], async (fileName) => fileName === "README.md" ? "safe documentation" : ["-----BEGIN ", "PRIVATE KEY-----"].join(""));
+  assert.deepEqual(findings, [{ file: "fixture.env", line: 1, pattern: "private-key" }]);
+  assert.equal(Object.hasOwn(findings[0], "value"), false);
 });

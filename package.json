@@ -8,8 +8,9 @@
     "start": "node src/server.js",
     "eval": "node eval/run-evaluation.js",
     "verify:runtime": "node scripts/verify-runtime.mjs",
+    "check:secrets": "node scripts/check-secrets.mjs",
     "test": "node --test test/*.test.js",
-    "check": "node --check src/server.js && node --check src/ai/gemini-adapter.js && node --check src/agent/renewal-agent.js && node --check public/run-state.js && node --check public/app.js && node --check scripts/verify-runtime.mjs"
+    "check": "node --check src/server.js && node --check src/ai/gemini-adapter.js && node --check src/agent/renewal-agent.js && node --check public/run-state.js && node --check public/app.js && node --check scripts/verify-runtime.mjs && node --check scripts/check-secrets.mjs"
   },
   "engines": {
     "node": ">=20"

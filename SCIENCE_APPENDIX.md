@@ -67,6 +67,7 @@ normal supply-chain assumptions.
 | Replaying a run does not create ambiguous action identities. | Each action carries a stable `renewal-relay:<runId>:<actionId>` idempotency key, `record_only` execution mode, and `retrySafe` marker; the memory store and Firestore adapter upsert the enclosing run by ID, and the test repeats the same run ID. | This proves safe identity/replay semantics for internal records only. Any future external connector still needs provider-specific idempotency, authorization, and retry contract tests. |
 | A stored run can be checked against the source content that produced it. | `fingerprintNotice` canonicalizes the source subject, sender, received time, and body in a fixed order and records a SHA-256 digest on the run and audit action; tests prove same-content stability and changed-content divergence. | This is an integrity fingerprint, not authenticity, a digital signature, or proof that the source was not already manipulated before intake. |
 | Cloud runtime proof can be repeated without exposing credentials. | `scripts/verify-runtime.mjs` checks only a supplied URL's `/api/health` contract and returns redacted `verified`, `blocked`, or `failed` JSON; unit tests cover missing URL, success, and contract failure. | No URL was available in this worktree, so live Cloud Run, revision, IAM, and Firestore proof remain open. |
+| Tracked secrets are rejected before publication. | `scripts/check-secrets.mjs` scans tracked files for high-confidence private-key and token formats, reports only file/line/pattern identifiers, and runs in GitHub Actions; tests cover detection without value echoing. | This is a lightweight detector, not a complete secret-management program; provider-side scanning and credential rotation remain deployment responsibilities. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
 | The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, seventeen automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
@@ -164,9 +165,10 @@ The test set contains seventeen cases:
 14. source fingerprints are stable for the same content and change when content changes;
 15. the runtime proof checker blocks a missing URL;
 16. the runtime proof checker verifies the health contract without copying query credentials;
-17. the runtime proof checker fails closed on a bad response.
+17. the runtime proof checker fails closed on a bad response;
+18. the tracked-file secret scan detects high-confidence formats without echoing values.
 
-Observed result: **17 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **18 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`
