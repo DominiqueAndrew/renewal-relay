@@ -2,7 +2,7 @@
 
 Snapshot: 2026-08-27, Europe/Paris
 
-Release boundary: public `main` at [`ec8c878f97d43272ea8a8da6a4cf5867745b969e`](https://github.com/DominiqueAndrew/renewal-relay/commit/ec8c878f97d43272ea8a8da6a4cf5867745b969e)
+Release boundary: public `main` at [`2d4b8bbe2ce4298d419bc7eeef995e35281ee131`](https://github.com/DominiqueAndrew/renewal-relay/commit/2d4b8bbe2ce4298d419bc7eeef995e35281ee131)
 Review decision: **repository ready with notes; overall submission blocked on human/platform gates**
 
 This is a release review, not a claim of deployment or submission. The release boundary is the current public `main` because no version tag exists. The first repository commit is `2026-08-27T15:26:43+02:00`, inside the live submission period; later commits on `main` are the shipped implementation, tests, and evidence updates.
@@ -22,8 +22,8 @@ Refreshed through the Devpost Hackathons plugin on 2026-08-27. Devpost remains a
 
 ## Verified at the release boundary
 
-- The public repository matches the local release boundary: `git ls-remote renewal refs/heads/main` returned `ec8c878f97d43272ea8a8da6a4cf5867745b969e`.
-- GitHub Actions run [33083722816](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33083722816), job `98557557825`, passed on the exact release SHA. It runs `npm ci`, tests, static checks, and the tracked-secret scan.
+- The public repository matches the local release boundary: `git ls-remote renewal refs/heads/main` returned `2d4b8bbe2ce4298d419bc7eeef995e35281ee131`.
+- GitHub Actions run [33084168686](https://github.com/DominiqueAndrew/renewal-relay/actions/runs/33084168686), job `98559142591`, passed on the exact release SHA. It runs `npm ci`, tests, static checks, and the tracked-secret scan.
 - `npm test`: 18 passed, 0 failed.
 - `npm run check`: passed, including server, AI adapter, agent, public state, browser bundle, runtime checker, and secret checker syntax/behavior checks.
 - `npm run eval`: 8/8 policy-conformance cases; status accuracy `1.0`; review recall `1.0`; ready precision `1.0`.

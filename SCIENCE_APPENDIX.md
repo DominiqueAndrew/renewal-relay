@@ -69,7 +69,7 @@ normal supply-chain assumptions.
 | Cloud runtime proof can be repeated without exposing credentials. | `scripts/verify-runtime.mjs` checks only a supplied URL's `/api/health` contract and returns redacted `verified`, `blocked`, or `failed` JSON; unit tests cover missing URL, success, and contract failure. | No URL was available in this worktree, so live Cloud Run, revision, IAM, and Firestore proof remain open. |
 | Tracked secrets are rejected before publication. | `scripts/check-secrets.mjs` scans tracked files for high-confidence private-key and token formats, reports only file/line/pattern identifiers, and runs in GitHub Actions; tests cover detection without value echoing. | This is a lightweight detector, not a complete secret-management program; provider-side scanning and credential rotation remain deployment responsibilities. |
 | Cloud Run and Firestore are supported by the architecture. | `Dockerfile` listens through `PORT`; `src/server.js` binds `0.0.0.0`; `src/store/run-store.js` selects Firestore when `GOOGLE_CLOUD_PROJECT` is set and otherwise uses memory; Docker smoke test passed. | No live Google Cloud project, service account, or Firestore read/write was available for this run. |
-| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, seventeen automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
+| The project is reproducible. | `README.md`, `package.json`, `package-lock.json`, Dockerfile, eighteen automated tests, and GitHub Actions workflow are committed; CI passed on the pushed SHA. | The live Gemini path and live Cloud Run path still require credentials. |
 
 ## 3. Decision model
 
@@ -147,7 +147,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains seventeen cases:
+The test set contains eighteen cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
