@@ -141,7 +141,7 @@ the prototype is production-certified.
 
 ### Automated tests
 
-The test set contains ten cases:
+The test set contains thirteen cases:
 
 1. synthetic extraction preserves vendor, amount, dates, and missing-fact behavior;
 2. amount threshold escalates a high-value renewal;
@@ -152,9 +152,12 @@ The test set contains ten cases:
 7. incomplete HTTP notices are rejected before queueing;
 8. the fixed-clock policy matrix conforms at the amount boundary and across missing/urgent facts;
 9. the extraction validator rejects unknown action fields, impossible dates, and out-of-range confidence;
-10. an adapter returning an unsafe extraction shape fails closed before any action is staged.
+10. an adapter returning an unsafe extraction shape fails closed before any action is staged;
+11. failed UI runs expose a safe retry state and hide outputs;
+12. completed UI runs alone expose the decision and staged actions;
+13. queued/running UI states expose a busy label and suppress duplicate-run affordances.
 
-Observed result: **10 passed, 0 failed** via `npm test`; syntax, whitespace, and
+Observed result: **13 passed, 0 failed** via `npm test`; syntax, whitespace, and
 container checks also passed. The separate `npm run eval` report is **8/8 exact
 policy-conformance cases**, with exact-match rate `1.0`, status accuracy `1.0`,
 review recall `1.0` across six expected-review cases, and ready precision `1.0`

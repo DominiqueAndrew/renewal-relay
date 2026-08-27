@@ -37,3 +37,11 @@ The inspected local screenshot artifacts are retained outside Git at `/tmp`:
 ## Scope and residual risk
 
 No responsive blocker was found: document width matched the viewport at all six sizes, the CTA was visible in the initial state, and the completed state rendered four staged action records. This is local Chrome evidence only; cross-browser behavior and a deployed Google Cloud runtime remain separate release gates.
+
+## Failure and retry spot check
+
+At 390 × 844, a browser-controlled provider failure produced `Run stopped safely`,
+`Run stopped safely · no actions staged`, and an enabled `Retry safely` button. The
+decision card and action section remained hidden (`actionCards=0`), and document/body
+width stayed 390px. The scrolled visual artifact is retained outside Git at
+`/tmp/renewal-relay-mobile-failure-ui-failed-scrolled.png`.

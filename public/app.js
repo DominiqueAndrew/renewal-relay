@@ -1,3 +1,5 @@
+import { getRunPresentation } from "./run-state.js";
+
 const $ = (id) => document.getElementById(id);
 const icons = { calendar: "□", task: "✓", draft: "✎", audit: "⌁" };
 let notice;
@@ -15,17 +17,19 @@ async function loadDemo() {
 
 function renderTimeline(run) {
   const timeline = $("timeline");
-  if (!run.timeline?.length) return;
-  timeline.innerHTML = run.timeline.map((event) => "<div class='timeline-item'><span class='timeline-icon " + (event.state === "running" ? "active" : "") + "'>" + (event.state === "failed" ? "!" : event.state === "running" ? "·" : "✓") + "</span><div class='timeline-copy'><strong>" + escapeHtml(event.label) + "</strong><span>" + escapeHtml(event.detail) + "</span></div><span class='timeline-time'>" + formatTime(event.at) + "</span></div>").join("");
-  const progress = Math.min(100, Math.round((run.timeline.length / 4) * 100));
-  $("progressBar").style.width = progress + "%";
-  $("progressText").textContent = run.status === "complete" ? "Run complete · evidence recorded" : run.status === "failed" ? "Run stopped safely" : "Agent is working in the background…";
-  $("runHeading").textContent = run.status === "complete" ? "Renewal packet ready" : "Working through notice";
+  const presentation = getRunPresentation(run);
+  if (run.timeline?.length) timeline.innerHTML = run.timeline.map((event) => "<div class='timeline-item'><span class='timeline-icon " + (event.state === "running" ? "active" : event.state === "failed" ? "failed" : "") + "'>" + (event.state === "failed" ? "!" : event.state === "running" ? "·" : "✓") + "</span><div class='timeline-copy'><strong>" + escapeHtml(event.label) + "</strong><span>" + escapeHtml(event.detail) + "</span></div><span class='timeline-time'>" + formatTime(event.at) + "</span></div>").join("");
+  $("progressBar").style.width = presentation.progress + "%";
+  $("progressText").textContent = presentation.progressText;
+  $("runHeading").textContent = presentation.heading;
   $("runId").textContent = run.id;
 }
 
 function renderDecision(run) {
-  if (!run.decision) return;
+  if (!getRunPresentation(run).showDecision) {
+    $("decisionCard").classList.add("hidden");
+    return;
+  }
   $("decisionCard").classList.remove("hidden");
   $("decisionStatus").textContent = run.decision.status.replaceAll("_", " ");
   $("decisionTitle").textContent = run.decision.status === "REVIEW_REQUIRED" ? "Human approval required" : "Ready for approval";
@@ -35,31 +39,51 @@ function renderDecision(run) {
 }
 
 function renderActions(run) {
-  if (!run.actions?.length) return;
+  if (!getRunPresentation(run).showActions) {
+    $("actionsSection").classList.add("hidden");
+    $("actionGrid").innerHTML = "";
+    return;
+  }
   $("actionsSection").classList.remove("hidden");
   $("actionGrid").innerHTML = run.actions.map((item) => "<article class='action-card'><span class='action-symbol'>" + (icons[item.type] || "·") + "</span><h3>" + escapeHtml(item.title) + "</h3><p>" + escapeHtml(item.detail) + "</p><span class='action-status'>" + escapeHtml(item.status) + "</span></article>").join("");
+}
+
+function renderRun(run) {
+  renderTimeline(run);
+  renderDecision(run);
+  renderActions(run);
+  $("runButton").querySelector("span:first-child").textContent = getRunPresentation(run).buttonLabel;
 }
 
 async function runAgent() {
   const button = $("runButton");
   button.disabled = true;
-  button.querySelector("span:first-child").textContent = "Agent is running…";
-  $("decisionCard").classList.add("hidden");
-  $("actionsSection").classList.add("hidden");
+  renderRun({ id: "QUEUED", status: "queued", timeline: [] });
   $("timeline").innerHTML = "<div class='empty-state'><span class='empty-icon'>◌</span><p>Starting the background run…</p></div>";
-  const response = await fetch("/api/runs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(notice) });
-  const { runId } = await response.json();
-  let done = false;
-  while (!done) {
-    await new Promise((resolve) => setTimeout(resolve, 180));
-    const run = await (await fetch("/api/runs/" + runId)).json();
-    renderTimeline(run);
-    renderDecision(run);
-    renderActions(run);
-    done = ["complete", "failed"].includes(run.status);
+  try {
+    const response = await fetch("/api/runs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(notice) });
+    if (!response.ok) throw new Error("The background run could not be started.");
+    const { runId } = await response.json();
+    if (!runId) throw new Error("The background run did not return an ID.");
+    let done = false;
+    for (let attempt = 0; !done && attempt < 60; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 180));
+      const runResponse = await fetch("/api/runs/" + runId);
+      if (!runResponse.ok) throw new Error("The background run could not be read back.");
+      const run = await runResponse.json();
+      renderRun(run);
+      done = ["complete", "failed"].includes(run.status);
+    }
+    if (!done) throw new Error("The background run timed out before a terminal state.");
+  } catch (error) {
+    renderRun({
+      id: "LOCAL FAILURE",
+      status: "failed",
+      timeline: [{ id: "local_failure", state: "failed", label: "Run stopped safely", detail: error.message || "The run could not be completed." }]
+    });
+  } finally {
+    button.disabled = false;
   }
-  button.disabled = false;
-  button.querySelector("span:first-child").textContent = "Run again";
 }
 
 function formatTime(value) {
